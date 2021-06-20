@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =5
+let g:netrw_dirhist_5='/home/amitgold/.config/nvim'
+let g:netrw_dirhist_4='/home/amitgold'
+let g:netrw_dirhist_3='/home/amitgold/Documents/Code/GSC-GUI'
+let g:netrw_dirhist_2='/home/amitgold/Documents/Code/gsc-worms/src'
+let g:netrw_dirhist_1='/home/amitgold/Documents/Code/gsc-worms'
+let g:netrw_dirhist_0='/home/amitgold/Documents/Code/GSC-GUI'
+let g:netrw_dirhist_9='/home/amitgold/Documents/Code/gsc-worms/src/API'
+let g:netrw_dirhist_8='/home/amitgold/Documents/Code/gsc-worms/src'
+let g:netrw_dirhist_7='/home/amitgold/Documents/Code/gsc-worms/src/API'
+let g:netrw_dirhist_6='/home/amitgold/Documents/Code/gsc-worms/src'
