@@ -6,13 +6,11 @@ pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
 
 # functions to switch from eDP1 to HDMI and vice versa
 function ActivateHDMI {
-    dunstify "Switching to HDMI1"
     xrandr --output HDMI1 --auto --scale-from 1920x1080 --output eDP1
     pacmd set-card-profile 0 output:hdmi-stereo
     MONITOR=HDMI1
 }
 function DeactivateHDMI {
-    dunstify "Switching to eDP1"
     pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
     MONITOR=eDP1
 }

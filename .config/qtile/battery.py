@@ -3,7 +3,7 @@ import subprocess
 
 
 def get_battery_icon():
-    script = os.path.expanduser('~/.config/qtile/get_bat_state.sh')
+    script = os.path.expanduser('~/.config/qtile/misc/get_bat_state.sh')
     bat_info = subprocess.check_output(
         [script]).decode('utf-8').strip().split()
     percent = int(bat_info[3].strip('%'))
