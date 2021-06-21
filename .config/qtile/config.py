@@ -24,6 +24,7 @@ alt = "mod1"
 terminal = "kitty"
 browser = "brave"
 home = os.path.expanduser("~")
+qtileDir = f"{home}/.config/qtile"
 
 
 @lazy.function
@@ -158,10 +159,10 @@ keys = [
     # ),
     # Key([mod, "shift"], "r", lazy.spawn(
     #     "reboot"), desc="Reboots the system"),
-    Key([mod, "mod1"], "l", lazy.spawn(
-        f"{home}/.config/qtile/lock"), desc="Locks the system"),
-    Key([mod, "mod1"], "s", lazy.spawn(
-        f"{home}/.config/qtile/lock -s"), desc="Suspends the system"),
+    Key([mod, alt], "l", lazy.spawn(
+        f"{qtileDir}/misc/lock.sh"), desc="Locks the system"),
+    Key([mod, alt], "s", lazy.spawn(
+        f"{qtileDir}/misc/lock.sh -s"), desc="Suspends the system"),
     Key([], "Print", lazy.spawn("flameshot gui"),
             desc="Take screenshot"),
     Key(["shift"], "Print", lazy.spawn(f"flameshot full -p {home}/Pictures"),
@@ -169,29 +170,29 @@ keys = [
 
     # Brightness
     Key([], "XF86MonBrightnessUp", lazy.spawn(
-        f"{home}/.config/qtile/brightnessControl.sh up")),
+        f"{qtileDir}/controllers/brightnessControl.sh up")),
     Key([], "XF86MonBrightnessDown", lazy.spawn(
-        f"{home}/.config/qtile/brightnessControl.sh down")),
+        f"{qtileDir}/controllers/brightnessControl.sh down")),
     Key(["shift"], "XF86MonBrightnessUp", lazy.spawn(
-        f"{home}/.config/qtile/brightnessControl.sh max")),
+        f"{qtileDir}/controllers/brightnessControl.sh max")),
     Key(["shift"], "XF86MonBrightnessDown", lazy.spawn(
-        f"{home}/.config/qtile/brightnessControl.sh blank")),
+        f"{qtileDir}/controllers/brightnessControl.sh blank")),
 
     # Volume
     Key([], "XF86AudioMute", lazy.spawn(
-        f"{home}/.config/qtile/volumeControl.sh mute")),
+        f"{qtileDir}/controllers/volumeControl.sh mute")),
     Key([], "XF86AudioLowerVolume", lazy.spawn(
-        f"{home}/.config/qtile/volumeControl.sh down")),
+        f"{qtileDir}/controllers/volumeControl.sh down")),
     Key([], "XF86AudioRaiseVolume", lazy.spawn(
-        f"{home}/.config/qtile/volumeControl.sh up")),
+        f"{qtileDir}/controllers/volumeControl.sh up")),
 
     # Microphone
     Key([], "XF86AudioMicMute", lazy.spawn(
-        f"{home}/.config/qtile/micControl.sh mute")),
+        f"{qtileDir}/controllers/micControl.sh mute")),
     Key(["shift"], "XF86AudioLowerVolume", lazy.spawn(
-        f"{home}/.config/qtile/micControl.sh down")),
+        f"{qtileDir}/controllers/micControl.sh down")),
     Key(["shift"], "XF86AudioRaiseVolume", lazy.spawn(
-        f"{home}/.config/qtile/micControl.sh up")),
+        f"{qtileDir}/controllers/micControl.sh up")),
 
     # Programs
     Key([mod], "b", lazy.spawn(browser), desc="Opens the browser."),
@@ -199,7 +200,7 @@ keys = [
         lazy.group["Music"].toscreen(toggle=False), desc="Opens Spotify."),
     Key([mod], "t", lazy.spawn(terminal), desc="Launch terminal."),
     Key([mod], "e", lazy.spawn("nemo"), desc="Launch file manager."),
-    Key([mod, "shift"], "e", lazy.spawn("kitty ranger"),
+    Key([mod, "shift"], "e", lazy.spawn(f"kitty {qtileDir}/misc/ranger.sh"),
         desc="Launch terminal file manager."),
     Key([mod], "c", lazy.spawn("code"),
         lazy.group["Programming"].toscreen(toggle=False), desc="Launch VSCode."),
