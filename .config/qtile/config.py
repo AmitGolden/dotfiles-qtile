@@ -6,6 +6,7 @@
 #
 # Material ColorScheme
 
+from libqtile.log_utils import logger
 from typing import List  # noqa: F401
 
 from libqtile import bar, layout, widget
@@ -469,6 +470,13 @@ def layout_change(currlayout, group):
         else:
             qtile.cmd_spawn(
                 f"xprop -id {id} -remove _PICOM_ROUNDED")
+
+
+@hook.subscribe.group_window_add
+def new_window(group, window):
+    if group.current_layout == 1:
+        qtile.cmd_spawn(
+            f"xprop -id {window.wid} -f _PICOM_ROUNDED 32c -set _PICOM_ROUNDED 1")
 
 
 # Java UI ToolKits
