@@ -58,6 +58,7 @@ alias teamviewer='sudo teamviewer --daemon start && teamviewer && sudo teamviewe
 alias gitrelease='git push && git checkout master && git merge develop && git push && git checkout develop'
 alias xclip="xclip -selection c"
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias confup='config commit -m "update" && config push'
 
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS"
 	--color fg:-1,bg:-1,hl:230,fg+:3,bg+:233,hl+:229
