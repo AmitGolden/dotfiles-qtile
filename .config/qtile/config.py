@@ -47,7 +47,7 @@ keys = [
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
     Key([mod], "space", lazy.layout.next(),
         desc="Move window focus to other window"),
-
+    Key([mod, "shift"], "space", lazy.layout.flip()),
 
 
     # Move windows between left/right columns or move up/down in current stack.
@@ -114,7 +114,6 @@ keys = [
     Key([mod, "shift"], "i", window_to_prev_group, lazy.screen.prev_group()),
     Key([mod, "shift"], "o", window_to_next_group, lazy.screen.next_group()),
 
-    Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
     Key([mod], "f", lazy.window.toggle_floating(), desc="Toggle floating"),
 
 
@@ -159,10 +158,8 @@ keys = [
     # ),
     # Key([mod, "shift"], "r", lazy.spawn(
     #     "reboot"), desc="Reboots the system"),
-    Key([mod, alt], "l", lazy.spawn(
+    Key([], "F9", lazy.spawn(
         f"{qtileDir}/misc/lock.sh"), desc="Locks the system"),
-    Key([mod, alt], "s", lazy.spawn(
-        f"{qtileDir}/misc/lock.sh -s"), desc="Suspends the system"),
     Key([], "Print", lazy.spawn("flameshot gui"),
             desc="Take screenshot"),
     Key(["shift"], "Print", lazy.spawn(f"flameshot full -p {home}/Pictures"),
@@ -277,8 +274,13 @@ widget_defaults = dict(
 )
 extension_defaults = widget_defaults.copy()
 
-layout_defaults = dict(border_width=3, single_border_width=0, margin=15,
-                       border_focus=colors["white"], border_normal=colors["background"])
+layout_defaults = dict(border_width=3,
+                       single_border_width=0,
+                       margin=15,
+                       border_focus=colors["white"],
+                       border_normal=colors["background"],
+                       border_focus_stack=colors["yellow"],
+                       border_normal_stack=colors["background"])
 
 # Layouts
 layouts = [
@@ -286,8 +288,7 @@ layouts = [
         name="MonadTall", **layout_defaults
     ),
     layout.Max(name="Max"),
-    layout.Columns(name="Columns", **layout_defaults),
-    layout.Stack(name="Stack", num_stacks=2, **layout_defaults),
+    layout.Columns(name="Columns", **layout_defaults,),
 ]
 
 
