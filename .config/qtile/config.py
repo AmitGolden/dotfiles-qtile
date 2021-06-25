@@ -6,7 +6,7 @@
 #
 # Material ColorScheme
 
-from libqtile.log_utils import logger
+import psutil
 from typing import List  # noqa: F401
 
 from libqtile import bar, layout, widget
@@ -49,7 +49,6 @@ keys = [
     Key([mod], "space", lazy.layout.next(),
         desc="Move window focus to other window"),
     Key([mod, "shift"], "space", lazy.layout.flip()),
-
 
     # Move windows between left/right columns or move up/down in current stack.
     # Moving out of range in Columns layout will create new column.
@@ -116,8 +115,6 @@ keys = [
     Key([mod, "shift"], "o", window_to_next_group, lazy.screen.next_group()),
 
     Key([mod], "f", lazy.window.toggle_floating(), desc="Toggle floating"),
-
-
 
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
@@ -194,7 +191,7 @@ keys = [
 
     # Programs
     Key([mod], "b", lazy.spawn(browser), desc="Opens the browser."),
-    Key([mod], "m", lazy.spawn("spotify"),
+    Key([mod], "m", lazy.spawn("LD_PRELOAD=/usr/local/lib/spotify-adblock.so spotify"),
         lazy.group["Music"].toscreen(toggle=False), desc="Opens Spotify."),
     Key([mod], "t", lazy.spawn(terminal), desc="Launch terminal."),
     Key([mod], "e", lazy.spawn("nemo"), desc="Launch file manager."),
@@ -212,16 +209,53 @@ keys = [
         lazy.spawn("playerctl next")),
     Key(["control", alt], 'bracketleft',
         lazy.spawn("playerctl previous")),
-    # Window
 ]
+
+
+def show_keys():
+    key_help = ""
+    for k in keys:
+        mods = ""
+
+        for m in k.modifiers:
+            if m == "mod4":
+                mods += "Super + "
+            else:
+                mods += m.capitalize() + " + "
+
+        if len(k.key) > 1:
+            mods += k.key.capitalize()
+        else:
+            mods += k.key
+
+        key_help += "{:<30} {}".format(mods, k.desc + "\n")
+
+    return key_help
+
+
+keys.extend(
+    [
+        Key(
+            [mod],
+            "x",
+            lazy.spawn(
+                "sh -c 'echo \""
+                + show_keys()
+                + f'" | rofi -dmenu -i -p "?"\''
+            ),
+            desc="Print keyboard bindings",
+        ),
+    ]
+)
+
 
 # Groups
 # From: https://github.com/AugustoNicola/dotfiles/blob/main/qtile/
 if __name__ in ['config', '__main__']:
     group_props = [
-        ('Music', {'label': '', 'matches': [Match(wm_class=['Spotify'])]}),
-        ('Web', {'label': '', 'matches': [Match(wm_class=['Brave'])]}),
-        ('Programming', {'label': '', 'matches': [Match(wm_class=['Code'])]}),
+        ('Music', {'label': '', 'matches': [Match(wm_class=['spotify'])]}),
+        ('Web', {'label': '', 'matches': [Match(wm_class=['brave'])]}),
+        ('Programming', {'label': '', 'matches': [Match(wm_class=['code'])]}),
         ('Misc', {'label': ''}),
         ('Misc2', {'label': ''})
     ]
@@ -337,6 +371,7 @@ screens = [
                     distro="Arch_checkupdates",
                     display_format=' {updates}',
                     foreground=colors["purple"],
+                    custom_command=f"{qtileDir}/misc/updates-arch-combined.sh",
                     colour_have_updates=colors["purple"], fontsize=16),
                 widget.Spacer(3),
 
@@ -477,6 +512,30 @@ def new_window(group, window):
     if group.current_layout == 1:
         qtile.cmd_spawn(
             f"xprop -id {window.wid} -f _PICOM_ROUNDED 32c -set _PICOM_ROUNDED 1")
+
+
+# Window Swallowing
+@hook.subscribe.client_new
+def _swallow(window):
+    pid = window.window.get_net_wm_pid()
+    ppid = psutil.Process(pid).ppid()
+    cpids = {c.window.get_net_wm_pid(): wid for wid,
+             c in window.qtile.windows_map.items()}
+    for _ in range(5):
+        if not ppid:
+            return
+        if ppid in cpids:
+            parent = window.qtile.windows_map.get(cpids[ppid])
+            parent.minimized = True
+            window.parent = parent
+            return
+        ppid = psutil.Process(ppid).ppid()
+
+
+@hook.subscribe.client_killed
+def _unswallow(window):
+    if hasattr(window, 'parent'):
+        window.parent.minimized = False
 
 
 # Java UI ToolKits
