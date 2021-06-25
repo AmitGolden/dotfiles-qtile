@@ -191,7 +191,7 @@ keys = [
 
     # Programs
     Key([mod], "b", lazy.spawn(browser), desc="Opens the browser."),
-    Key([mod], "m", lazy.spawn("LD_PRELOAD=/usr/local/lib/spotify-adblock.so spotify"),
+    Key([mod], "m", lazy.spawn(f"{qtileDir}/misc/spotify.sh"),
         lazy.group["Music"].toscreen(toggle=False), desc="Opens Spotify."),
     Key([mod], "t", lazy.spawn(terminal), desc="Launch terminal."),
     Key([mod], "e", lazy.spawn("nemo"), desc="Launch file manager."),
