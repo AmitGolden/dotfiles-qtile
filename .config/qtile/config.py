@@ -27,6 +27,8 @@ browser = "brave"
 home = os.path.expanduser("~")
 qtileDir = f"{home}/.config/qtile"
 
+powermenu = "rofi -show p -modi p:rofi-power-menu -width 20 -lines 6"
+
 
 @lazy.function
 def window_to_prev_group(qtile):
@@ -143,7 +145,7 @@ keys = [
         desc="Switch between windows"),
     Key([mod], "v", lazy.spawn("bwmenu"),
         desc="Launch password manager"),
-    Key([mod], "p", lazy.spawn("rofi -show p -modi p:rofi-power-menu -width 20 -lines 6"),
+    Key([mod], "p", lazy.spawn(powermenu),
         desc="Launch power menu"),
 
     # System
@@ -431,6 +433,9 @@ screens = [
                 ),
                 widget.Clock(
                     foreground=colors["blue"], format="%-H:%M, %-d %b"),
+                widget.Spacer(3),
+                widget.TextBox(text="", fontsize=18, padding=8,
+                               foreground=colors["red"], mouse_callbacks={'Button1': lambda: qtile.cmd_spawn(powermenu)}),
                 widget.Spacer(10),
             ],
             32,
