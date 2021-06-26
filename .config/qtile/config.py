@@ -369,6 +369,7 @@ screens = [
 
                 # Updates
                 widget.CheckUpdates(
+                    padding=2,
                     update_interval=1800,
                     distro="Arch_checkupdates",
                     display_format=' {updates}',
@@ -433,8 +434,8 @@ screens = [
                 ),
                 widget.Clock(
                     foreground=colors["blue"], format="%-H:%M, %-d %b"),
-                widget.Spacer(3),
-                widget.TextBox(text="", fontsize=18, padding=8,
+                widget.Spacer(8),
+                widget.TextBox(text="襤", fontsize=24, padding=4,
                                foreground=colors["red"], mouse_callbacks={'Button1': lambda: qtile.cmd_spawn(powermenu)}),
                 widget.Spacer(10),
             ],
