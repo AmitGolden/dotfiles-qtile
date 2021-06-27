@@ -164,6 +164,8 @@ keys = [
             desc="Take screenshot"),
     Key(["shift"], "Print", lazy.spawn(f"flameshot full -p {home}/Pictures"),
         desc="Take full screenshot"),
+    Key([mod], "r", lazy.spawn(
+        f"{qtileDir}/misc/toggle_redshift.sh"), desc="Toggle Redshift"),
 
     # Brightness
     Key([], "XF86MonBrightnessUp", lazy.spawn(
@@ -281,6 +283,10 @@ if __name__ in ['config', '__main__']:
 
 def get_keyboard_layout():
     return subprocess.check_output(['xkblayout-state', 'print', '"%s"']).decode('utf-8').strip()[1:3]
+
+
+def redshift_status():
+    return subprocess.check_output([f"{qtileDir}/misc/redshift_status.sh"]).decode('utf-8').strip()
 
 
 colors = {
