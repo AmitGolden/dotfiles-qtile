@@ -331,7 +331,8 @@ layouts = [
         name="MonadTall", **layout_defaults
     ),
     layout.Max(name="Max"),
-    layout.Columns(name="Columns", **layout_defaults,),
+    layout.Columns(name="Columns", **layout_defaults,
+                   wrap_focus_rows=False, wrap_focus_columns=False),
 ]
 
 
