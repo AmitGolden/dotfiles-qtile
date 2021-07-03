@@ -14,6 +14,7 @@ call plug#begin('~/.vim/plugged')
 if !exists('g:vscode')
 	" Themes
 	Plug 'kaicataldo/material.vim'
+	" Plug 'marko-cerovac/material.nvim'
 	Plug 'itchyny/lightline.vim'
 	Plug 'ryanoasis/vim-devicons'
 	Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
@@ -33,6 +34,11 @@ if !exists('g:vscode')
 	Plug 'tpope/vim-fugitive'
 	Plug 'junegunn/gv.vim'
 endif
+
+" Lisp
+Plug 'bhurlow/vim-parinfer'
+Plug 'tpope/vim-sexp-mappings-for-regular-people'
+Plug 'guns/vim-sexp'
 
 " Text Objects
 Plug 'michaeljsmith/vim-indent-object'
