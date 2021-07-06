@@ -16,7 +16,6 @@ pavucontrol
 polkit-gnome
 gnome-keyring
 
-caffeine-ng-git
 redshift
 network-manager-applet
 blueman-applet

@@ -28,6 +28,7 @@ home = os.path.expanduser("~")
 qtileDir = f"{home}/.config/qtile"
 
 powermenu = "rofi -show p -modi p:rofi-power-menu -width 20 -lines 6"
+toggle_caffeine_path = f"{qtileDir}/caffeine/toggle_caffeine.sh"
 
 
 @lazy.function
@@ -166,6 +167,8 @@ keys = [
         desc="Take full screenshot"),
     Key([mod], "r", lazy.spawn(
         f"{qtileDir}/misc/toggle_redshift.sh"), desc="Toggle Redshift"),
+    Key([mod, "shift"], "c", lazy.spawn(
+        toggle_caffeine_path), desc="Toggle Caffeine"),
 
     # Brightness
     Key([], "XF86MonBrightnessUp", lazy.spawn(
@@ -289,6 +292,14 @@ def redshift_status():
     return subprocess.check_output([f"{qtileDir}/misc/redshift_status.sh"]).decode('utf-8').strip()
 
 
+def get_caffeine_state():
+    return subprocess.check_output([f"{qtileDir}/caffeine/is_caffeine_active.sh"]).decode('utf-8').strip()
+
+
+def toggle_caffeine():
+    qtile.cmd_spawn(toggle_caffeine_path)
+
+
 colors = {
     "background": "#212121",
     "dark-grey": "#1A1A1A",
@@ -373,6 +384,10 @@ screens = [
                 # Systray
                 widget.Systray(icon_size=16, padding=8),
                 widget.Spacer(5),
+
+                # Caffeine
+                widget.GenPollText(
+                    foreground=colors["white"], fontsize=18, padding=5, func=get_caffeine_state, update_interval=1, mouse_callbacks={'Button1': toggle_caffeine}),
 
                 # Updates
                 widget.CheckUpdates(

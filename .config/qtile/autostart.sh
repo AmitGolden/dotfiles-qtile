@@ -12,7 +12,8 @@ killall caffeine
 setxkbmap -layout "us,il" -option "grp:alt_shift_toggle" &
 feh --bg-scale --randomize ~/Pictures/Wallpapers/* && eval "set -- $(sed 1d "$HOME/.fehbg")" && betterlockscreen -u $4 -b &
 picom --config ~/.config/qtile/picom.conf &
-caffeine start &
+# caffeine start &
+~/.config/qtile/caffeine/caffeine.sh &
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 xss-lock -- ~/.config/qtile/misc/lock.sh &
 nm-applet &
