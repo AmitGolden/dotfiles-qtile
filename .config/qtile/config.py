@@ -344,6 +344,9 @@ layouts = [
     layout.Max(name="Max"),
     layout.Columns(name="Columns", **layout_defaults,
                    wrap_focus_rows=False, wrap_focus_columns=False),
+    layout.MonadWide(
+        name="MonadWide", **layout_defaults
+    ),
 ]
 
 
