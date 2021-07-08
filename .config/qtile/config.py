@@ -391,6 +391,7 @@ screens = [
                 # Caffeine
                 widget.GenPollText(
                     foreground=colors["white"], fontsize=18, padding=5, func=get_caffeine_state, update_interval=1, mouse_callbacks={'Button1': toggle_caffeine}),
+                widget.Spacer(7),
 
                 # Updates
                 widget.CheckUpdates(
