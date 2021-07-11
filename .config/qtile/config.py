@@ -144,7 +144,7 @@ keys = [
         desc="Spawn a command using a prompt widget."),
     Key([alt], "Tab", lazy.spawn("rofi -show window -kb-accept-entry '!Alt-Tab,!Alt+Alt_L' -kb-row-down 'Alt+Tab'"),
         desc="Switch between windows"),
-    Key([mod], "v", lazy.spawn("bwmenu"),
+    Key([mod], "v", lazy.spawn(f"{qtileDir}/bitwarden-rofi/bwmenu"),
         desc="Launch password manager"),
     Key([mod], "p", lazy.spawn(powermenu),
         desc="Launch power menu"),
