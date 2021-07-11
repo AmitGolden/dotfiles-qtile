@@ -25,7 +25,7 @@ betterlockscreen
 xss-lock
 
 rofi
-bitwarden-rofi
+jq
 rofi-power-menu
 
 Fira Sans
