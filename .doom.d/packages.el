@@ -52,3 +52,5 @@
 (package! ligature
   :recipe (:host github :repo "mickeynp/ligature.el"
            :files ("ligature.el")))
+
+;; (package! company-tabnine)
