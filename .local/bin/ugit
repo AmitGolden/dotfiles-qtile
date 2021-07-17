@@ -1,0 +1,294 @@
+#!/usr/bin/env bash
+
+# ugit: Undo your last oopsie in Git
+# 
+
+set -uo pipefail;
+
+SCRIPT_NAME="$0"
+SCRIPT_URL="https://github.com/Bhupesh-V/ugit/releases/latest/download/ugit"
+TMP_FILE="/tmp/ugit.sh"
+VERSION="1.0"
+
+installed() {
+    cmd=$(command -v "${1}")
+
+    [[ -n "${cmd}" ]] && [[ -f "${cmd}" ]]
+    return ${?}
+}
+
+die() {
+    >&2 echo "Fatal: ${@}"
+    exit 1
+}
+
+[[ "${BASH_VERSINFO[0]}" -lt 3 ]] && die "Bash >=3 required"
+
+deps=(fzf git awk xargs cut nl tput)
+for dep in "${deps[@]}"; do
+    installed "${dep}" || die "Missing dependency: '${dep}'"
+done
+
+printf "%s\n" "$(tput bold)Undo your last oopsie in Git 🙈️$(tput sgr0)"
+
+display_menu() {
+    printf "%s\n" "Undo [git commit]"
+    printf "%s\n" "Undo [git push]"
+    printf "%s\n" "Undo [git add]"
+    printf "%s\n" "Undo [git pull]"
+    printf "%s\n" "Undo/Change [git commit message]"
+    printf "%s\n" "Undo local branch delete [git branch -d]"
+    printf "%s\n" "Undo [git reset]"
+    printf "%s\n" "Undo a Merge with Conflicts"
+    printf "%s\n" "Undo an Unpushed Merge Commit"
+    printf "%s\n" "Undo a Pushed Merge Commit"
+    printf "%s\n" "Undo [git stash pop/drop/clear]"
+    printf "%s\n" "Undo [git stash apply]"
+    printf "%s\n" "Undo [git tag -d] tag delete"
+    printf "%s\n" "Undo [git rebase]"
+    printf "%s\n" "Undo/Recover commited file delete"
+    printf "%s\n" "Undo/Recover uncommited file delete"
+    printf "%s\n" "Undo/Restore file to a previous commit/version"
+}
+
+
+undo_git_commit() {
+    # TODO: ask which commit to undo?
+    git reset HEAD~
+    # undo last commit (don't unstage everything)
+    # git reset --soft HEAD^
+}
+
+do_git_reset() {
+    # FROM: https://stackoverflow.com/questions/1223354/undo-git-pull-how-to-bring-repos-to-old-state
+    FZF_HEADER=${1:-"Choose last good branch commit"}
+    last_good_state=$(git reflog | fzf --ansi --height 20% --reverse --header="$FZF_HEADER" | awk '{print $1}')
+    # check if working tree is clean or not
+    [[ $(git status --porcelain 2>/dev/null) ]] && read -p "You have uncommited changes, still proceed? [Y/n]: " -n 1 -r USER_INPUT
+    USER_INPUT=${USER_INPUT:-Y}
+    [[ "$USER_INPUT" == Y ]] && git reset --hard "$last_good_state"
+}
+
+undo_git_add() {
+    # show prompt to unstage files interactively
+    choices=$(git ls-files | fzf --height 10% --reverse --multi --marker='🢂' --color 'marker:#B8CC52' --header="Choose Files to unstage (TAB to select)")
+    git restore --staged $choices
+}
+
+change_commit_message() {
+    printf "%s" "Enter New Commit Message (Ctrl+d to save):"
+    msg=$(</dev/stdin)
+    echo
+    [[ "$msg" ]] && git commit --amend -m "$msg" || printf "%s" "Empty Commit string!"
+}
+
+undo_git_push() {
+    commit=$(git log --oneline | fzf --ansi --height 10% --reverse --multi --header="Choose Commit hash to revert/undo" | awk '{print $1}')
+    if git revert "$commit"; then
+        printf "%s\n" "Commit: $commit successfully reverted."
+        printf "%s\n" "Make sure to run 'git push' now"
+    fi
+}
+
+undo_branch_delete() {
+    # undo local branch delete
+    last_branch_commit=$(git reflog | fzf --ansi --height 20% --reverse --multi --header="Choose last good branch commit" | awk '{print $1}')
+    # echo "$last_branch_commit"
+    read -p "Enter Branch Name: " -r BRANCH_NAME
+    if git checkout -b "$BRANCH_NAME" "$last_branch_commit"; then
+        printf "%s\n" "Branch $BRANCH_NAME successfully recovered"
+    fi
+}
+
+undo_git_reset() {
+    LAST_GOOD_STATE=$(git reflog | fzf --ansi --height 20% --reverse --multi --header="Choose last known good commit" | awk '{print $1}')
+    git reset "$LAST_GOOD_STATE"
+}
+
+undo_git_merge() {
+    # Undoing a git merge is a messy business
+    printf "%s\n" "Tips: "
+    printf "%s\n" "Do a revert of the previous revert if the faulty side branch was fixed by adding corrections on top."
+    printf "%s\n" "Re-merge the result branch if the faulty side branch (discarded by an earlier revert of a merge) was rebuilt from scratch (i.e. rebasing and fixing)."
+    if [[ "$1" == "conflicts" ]]; then
+        git merge --abort
+    elif [[ "$1" == "unpushed" ]]; then
+        # FROM: https://stackoverflow.com/questions/1223354/undo-git-pull-how-to-bring-repos-to-old-state
+        # last_good_state=$(git reflog | fzf --ansi --height 20% --reverse --header="Choose the merge commit" | awk '{print $1}')
+        # check if working tree is clean or not
+        [[ $(git status --porcelain 2>/dev/null) ]] && read -p "You have uncommited changes, still proceed? [Y/n]: " -n 1 -r USER_INPUT
+        USER_INPUT=${USER_INPUT:-Y}
+        # ref: ORIG_HEAD points to the original commit from before the merge
+        [[ "$USER_INPUT" == Y ]] && git reset --merge ORIG_HEAD || exit 0
+        # [[ "$USER_INPUT" == Y ]] && git reset --merge "$last_good_state" || exit 0
+    else
+        default_branch=$(git remote show origin | awk '/HEAD/ {print $3}')
+        printf "%s\n" "Switching to default branch $default_branch"
+        git checkout "$default_branch"
+        commit=$(git log --oneline | fzf --ansi --height 10% --reverse --header="Choose the merge commit" | awk '{print $1}')
+        if git revert -m 1 "$commit"; then
+            printf "%s\n" "Merge ($commit) successfully reverted"
+        fi
+    fi
+}
+
+recover_lost_stash() {
+    LOST_STASH=$(git fsck --no-progress --unreachable | grep commit | cut -d ' ' -f3 | xargs git log --oneline --merges --no-walk | fzf --ansi --height 20% --reverse --header="Choose commit associated with stash" | awk '{print $1}')
+    read -p "Enter Stash Message/Comment: " -r STASH_MSG
+    if git update-ref refs/stash "$LOST_STASH" --create-reflog -m "$STASH_MSG"; then
+        printf "%s\n" "Stash Successfully Recovered"
+        git stash list | grep "$STASH_MSG"
+    fi
+}
+
+undo_git_stash_apply() {
+    # check if diff coloring is set to auto in git config if not the reverse apply command will fail
+    is_diff_color=$(git config --get color.diff | tr -d '\n')
+    if [[ "$is_diff_color" == "auto" ]]; then
+        if git stash show -p | git apply --reverse; then
+            printf "%s\n" "Done 👍️"
+        fi
+    else
+        printf "%s\n" "Please change diff color to auto in .gitconfig & run ugit again"
+        printf "%s\n" "Or use the following command [git config --global color.diff \"auto\"]"
+    fi
+}
+
+recover_deleted_tag() {
+    # only works for annotated tags? :(
+    printf "%s\n\n" "Note: Only annotated tags can be restored"
+
+    read -p "Enter lost Tag name (e.g v1.2): " -r TAG_NAME
+    COMMIT=$(git fsck --no-progress --unreachable --tags | awk '/tagged/ {print $6}')
+
+    [[ -z "$COMMIT" ]] && printf "%s\n" "Unable to find any deleted tags :(" && exit 1
+
+    OBJECT_TYPE=$(git cat-file -t "$COMMIT")
+    DELETED_TAG=$(git cat-file -p "$COMMIT" | awk '/tag / {print$2;exit;}')
+
+    if [[ "$OBJECT_TYPE" == "tag" && "$DELETED_TAG" != "$TAG_NAME" ]]; then
+        printf "%s" "Input tag name $TAG_NAME doesn't match with previously deleted tag $DELETED_TAG"
+    elif git update-ref refs/tags/"$TAG_NAME" --create-reflog "$COMMIT"; then
+        printf "%s\n" "Tag $TAG_NAME Successfully Recovered 👍️"
+    else
+        printf "%s\n" "Unable to recover deleted tag $TAG_NAME"
+    fi
+}
+
+undo_file_delete() {
+    if [[ "$1" == "uncommited" ]]; then
+        # user didn't commit the file deletion
+        DELETED_FILE=$(git ls-files -d | fzf --ansi --height 20% --reverse --header="Choose deleted file to recover" | awk '{print $1}')
+        if git checkout HEAD "$DELETED_FILE"; then
+            printf "%s\n" "$DELETED_FILE Successfully Recovered 👍️"
+            exit 0
+        fi
+    fi
+    read -p "Enter complete filename: " -r FILENAME
+    COMMIT=$(git log --diff-filter=D --oneline | fzf --ansi --height 20% --reverse --header="Choose commit that deleted $FILENAME" | awk '{print $1}')
+    if git checkout "$COMMIT"~1 -- "$FILENAME"; then
+        printf "%s\n" "$FILENAME Successfully Recovered 👍️"
+    fi
+}
+
+restore_file() {
+    FILE=$(git ls-files | fzf --ansi --height 20% --reverse --header="Choose file to restore" | awk '{print $1}')
+    COMMIT=$(git log --oneline "$FILE" | fzf --ansi --height 80% --reverse --prompt="Choose commit to restore file to" --header="Use ctrl-j/ctrl-k to navigate file preview. ctrl+space to toggle preview" --preview "echo {} | cut -d' ' -f1 | xargs -I{} git show {}:$FILE" --bind 'j:down,k:up,ctrl-j:preview-down,ctrl-k:preview-up,ctrl-space:toggle-preview' --preview-window down:60%)
+    COMMIT=$(printf "%s" "$COMMIT" | awk '{print $1}')
+
+    if ! git diff -s --quiet "$FILE"; then
+        # check if any local changes
+        printf "%s\n" "$FILE seems to be modified. Please either commit or discard those changes."
+        exit 0
+    elif git restore --source="$COMMIT" "$FILE"; then
+        printf "%s\n" "$FILE restored to version at $COMMIT"
+    fi
+}
+
+ugit_menu() {
+    case $option in
+        1) undo_git_commit;;
+        2) undo_git_push;;
+        3) undo_git_add;;
+        4) undo_git_merge "unpushed";;
+        5) change_commit_message;;
+        6) undo_branch_delete;;
+        7) undo_git_reset;;
+        8) undo_git_merge "conflicts";;
+        9) do_git_reset;;
+        10) undo_git_merge "pushed";;
+        11) recover_lost_stash;;
+        12) undo_git_stash_apply;;
+        13) recover_deleted_tag;;
+        14) do_git_reset "Choose commit just before rebase started";;
+        15) undo_file_delete;;
+        16) undo_file_delete "uncommited";;
+        17) restore_file;;
+    esac
+}
+
+show_version() {
+    printf "ugit version %s\n" "$VERSION"
+}
+
+print_help() {
+    cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [-h] [-v] [-u]
+
+ugit helps you undo your last git command without much effort
+Just run 'ugit' and search for what you want to undo
+
+Available options:
+
+-h, --help      Print this help and exit
+-v, --version   Print current ugit version
+-u, --update    Update ugit
+EOF
+    printf "\n%s\n" "Contact 📬️: varshneybhupesh@gmail.com for assistance"
+    printf "%s\n" "Read the guide: https://bhupesh.gitbook.io/notes/git/how-to-undo-anything-in-git"
+}
+
+ugit_update() {
+    printf "%s\n" "Checking for updates ..."
+    curl -s -L "$SCRIPT_URL" > "$TMP_FILE"
+    NEW_VER=$(grep "^VERSION" "$TMP_FILE" | awk -F'[="]' '{print $3}')
+
+    if [[ "$VERSION" < "$NEW_VER" ]]; then
+        printf "Updating ugit \e[31;1m%s\e[0m -> \e[32;1m%s\e[0m\n" "$VERSION" "$NEW_VER"
+        chmod +x "$TMP_FILE"
+        # WIP
+        if cp "$TMP_FILE" "$SCRIPT_NAME"; then printf "%s\n" "Done"; fi
+        rm -f "$TMP_FILE"
+    else
+        printf "%s\n" "ugit is already at the latest version ($VERSION)"
+        rm -f "$TMP_FILE"
+    fi
+    exit 0
+}
+
+main() {
+    if [[ $# -gt 0 ]]; then
+        local key="$1"
+        case "$key" in
+            --version|-v)
+                show_version
+                ;;
+            --update|-u)
+                ugit_update
+                ;;
+            --help|-h)
+                print_help
+                exit
+                ;;
+            *)
+                printf "%s\n" "ERROR: Unrecognized argument $key"
+                exit 1
+                ;;
+        esac
+    else
+        option=$(display_menu | nl -n ln | fzf --header="Don't worry we all mess up sometimes" --height 30% --reverse --pointer='ᐅ' --cycle | awk '{print $1}')
+        ugit_menu
+    fi
+}
+
+main "$@"

@@ -57,6 +57,10 @@ alias teamviewer='sudo teamviewer --daemon start && teamviewer && sudo teamviewe
 alias gitrelease='git push && git checkout master && git merge develop && git push && git checkout develop'
 alias xclip="xclip -selection c"
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+
+alias ugit='~/.local/bin/ugit'
+alias sub='~/.local/bin/OpenSubtitlesDownload.py'
+
 function confup {
 	config commit -m "update" && config push
 }
@@ -101,8 +105,8 @@ export BAT_THEME=base16
 # export TERM=kitty
 export GDK_CORE_DEVICE_EVENTS=1
 
-export BW_SESSION="SIzRe7yU5ynPDTZan8wfEhaKVCruqckqroeWnQ6X0iJkycGhmfbriMIfNUdxD/r+2vb4mb7+elfr9rkvl4sMwg=="
-
+export BW_SESSION="ifIGi83yNlBdU6T9YH7TES/YIXIoYeu1NH9pBJ7WHXh8jZ/Ggud3AWxtsVAAe9XkTmS+2AsoAQ2p/6tCGS7m/g=="
+``
 source ~/.config/zsh/ranger-autojump.plugin.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
