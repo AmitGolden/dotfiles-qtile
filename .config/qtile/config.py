@@ -43,6 +43,18 @@ def window_to_next_group(qtile):
     qtile.current_window.togroup(next_group_name)
 
 
+def kick_to_next_screen(qtile, direction=1):
+    other_scr_index = (qtile.screens.index(
+        qtile.currentScreen) + direction) % len(qtile.screens)
+    othergroup = None
+    for group in qtile.cmd_groups().values():
+        if group['screen'] == other_scr_index:
+            othergroup = group['name']
+            break
+    if othergroup:
+        qtile.moveToGroup(othergroup)
+
+
 keys = [
     # Switch between windows
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
@@ -116,6 +128,10 @@ keys = [
     Key([mod], "o", lazy.screen.next_group()),
     Key([mod, "shift"], "i", window_to_prev_group, lazy.screen.prev_group()),
     Key([mod, "shift"], "o", window_to_next_group, lazy.screen.next_group()),
+    # Key([mod], "o", lazy.function(kick_to_next_screen)),
+    # Key([mod, "shift"], "o", lazy.function(kick_to_next_screen, -1)),
+    Key([mod, "control", "shift"], "o", lazy.function(kick_to_next_screen)),
+    Key([mod, "control", "shift"], "i", lazy.function(kick_to_next_screen, -1)),
 
     Key([mod], "f", lazy.window.toggle_floating(), desc="Toggle floating"),
 
