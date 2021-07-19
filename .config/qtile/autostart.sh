@@ -2,7 +2,7 @@
 
 killall redshift
 killall nm-applet
-killall caffeine
+killall caffeine.sh
 # killall blueman-applet
 # killall polkit-gnome-authentication-agent-1
 # killall dunst

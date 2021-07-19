@@ -385,7 +385,7 @@ screens = [
                                 font="FiraCode Nerd Font", fontsize=14, borderwidth=0,
                                 markup_focused='<span weight="bold">{}</span>'),
                 # Systray
-                widget.Systray(icon_size=16, padding=8),
+                widget.Systray(icon_size=16, padding=8,),
                 widget.Spacer(5),
 
                 # Caffeine
