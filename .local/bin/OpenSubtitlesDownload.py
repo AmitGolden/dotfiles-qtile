@@ -269,13 +269,13 @@ def selectionGnome(subtitlesResultList):
     columnCount = ''
 
     # Generate selection window content
-    for item in subtitlesResultList['data']:
+    for idx, item in enumerate(subtitlesResultList['data']):
         if item['MatchedBy'] == 'moviehash':
             subtitlesMatchedByHash += 1
         else:
             subtitlesMatchedByName += 1
 
-        subtitlesItems += '"' + item['SubFileName'] + '" '
+        subtitlesItems += f'{idx} "' + item['SubFileName'] + '" '
 
         if opt_selection_hi == 'on':
             columnHi = '--column="HI" '
@@ -313,26 +313,32 @@ def selectionGnome(subtitlesResultList):
 
     # Spawn zenity "list" dialog
     process_subtitlesSelection = subprocess.Popen('zenity --width=' + str(opt_gui_width) + ' --height=' + str(opt_gui_height) + ' --list' + tilestr + textstr
-                                                  + ' --column="Available subtitles" ' + columnHi + columnLn + columnMatch + columnRate + columnCount + subtitlesItems, shell=True, stdout=subprocess.PIPE)
+                                                  + ' --column "id" --column="Available subtitles" ' + columnHi + columnLn + columnMatch + columnRate + columnCount + subtitlesItems + ' --hide-column=1 --print-column=ALL', shell=True, stdout=subprocess.PIPE)
 
     # Get back the result
     result_subtitlesSelection = process_subtitlesSelection.communicate()
 
+    subtitlesSelected = ""
+    subIndex = -1
+
     # The results contain a subtitles?
     if result_subtitlesSelection[0]:
-        subtitlesSelected = str(
+        result = str(
             result_subtitlesSelection[0], 'utf-8').strip("\n")
 
         # Hack against recent zenity version?
-        if len(subtitlesSelected.split("|")) > 1:
-            if subtitlesSelected.split("|")[0] == subtitlesSelected.split("|")[1]:
-                subtitlesSelected = subtitlesSelected.split("|")[0]
+        if len(result.split("|")) > 1:
+            if result.split("|")[0] == result.split("|")[1]:
+                result = result.split("|")[0]
+        # Get index and result
+        [subIndex, subtitlesSelected] = result.split('|')[0:2]
     else:
         if process_subtitlesSelection.returncode == 0:
             subtitlesSelected = subtitlesResultList['data'][0]['SubFileName']
+            subIndex = 0
 
-    # Return the result
-    return subtitlesSelected
+    # Return the index and result
+    return (subtitlesSelected, int(subIndex))
 
 # ==== KDE selection window ====================================================
 
@@ -376,6 +382,9 @@ def selectionKde(subtitlesResultList):
     # Get back the result
     result_subtitlesSelection = process_subtitlesSelection.communicate()
 
+    subtitlesSelected = ""
+    keySelected = -1
+
     # The results contain the key matching a subtitles?
     if result_subtitlesSelection[0]:
         keySelected = int(
@@ -383,7 +392,7 @@ def selectionKde(subtitlesResultList):
         subtitlesSelected = subtitlesResultList['data'][keySelected]['SubFileName']
 
     # Return the result
-    return subtitlesSelected
+    return (subtitlesSelected, keySelected)
 
 # ==== CLI selection mode ======================================================
 
@@ -437,9 +446,9 @@ def selectionCLI(subtitlesResultList):
     # Return the result
     if sub_selection == 0:
         print("Cancelling search...")
-        return ""
+        return ("", -1)
 
-    return (subtitlesResultList['data'][sub_selection-1]['SubFileName'], sub_selection)
+    return (subtitlesResultList['data'][sub_selection-1]['SubFileName'], sub_selection - 1)
 
 # ==== Automatic selection mode ================================================
 
@@ -452,7 +461,7 @@ def selectionAuto(subtitlesResultList):
     languageListReversed = list(reversed(languageList))
     maxScore = -1
 
-    for subtitle in subtitlesResultList['data']:
+    for idx, subtitle in enumerate(subtitlesResultList['data']):
         score = 0
         # points to respect languages priority
         score += languageListReversed.index(subtitle['SubLanguageID']) * 100
@@ -469,8 +478,9 @@ def selectionAuto(subtitlesResultList):
         if score > maxScore:
             maxScore = score
             subtitlesSelected = subtitle['SubFileName']
+            subIndex = idx
 
-    return subtitlesSelected
+    return (subtitlesSelected, subIndex)
 
 # ==== Check dependencies ======================================================
 
@@ -824,7 +834,8 @@ try:
             if not subtitlesSelected:
                 if opt_selection_mode == 'auto':
                     # Automatic subtitles selection
-                    subtitlesSelected = selectionAuto(subtitlesResultList)
+                    (subtitlesSelected, subIndex) = selectionAuto(
+                        subtitlesResultList)
                 else:
                     # Go through the list of subtitles and handle 'auto' settings activation
                     for item in subtitlesResultList['data']:
@@ -841,28 +852,17 @@ try:
 
                     # Spaw selection window
                     if opt_gui == 'gnome':
-                        subtitlesSelected = selectionGnome(subtitlesResultList)
+                        (subtitlesSelected, subIndex) = selectionGnome(
+                            subtitlesResultList)
                     elif opt_gui == 'kde':
-                        subtitlesSelected = selectionKde(subtitlesResultList)
+                        (subtitlesSelected, subIndex) = selectionKde(
+                            subtitlesResultList)
                     else:  # CLI
                         (subtitlesSelected, subIndex) = selectionCLI(
                             subtitlesResultList)
 
             # At this point a subtitles should be selected
             if subtitlesSelected:
-                # subIndex = 0
-                # subIndexTemp = 0
-
-                # # Find it on the list
-                # for item in subtitlesResultList['data']:
-                #     if item['SubFileName'] == subtitlesSelected:
-                #         subIndex = subIndexTemp
-                #         break
-                #     else:
-                #         subIndexTemp += 1
-
-                subIndex -= 1
-
                 # Prepare download
                 subID = subtitlesResultList['data'][subIndex]['IDSubtitleFile']
                 subURL = subtitlesResultList['data'][subIndex]['SubDownloadLink']
@@ -917,25 +917,8 @@ try:
                 else:  # CLI
                     print(">> Downloading '" + subtitlesResultList['data'][subIndex]
                           ['LanguageName'] + "' subtitles for '" + videoTitle + "'")
-                    process_subtitlesDownload = 1
-
-                    downloadResult = osd_server.DownloadSubtitles(
-                        session['token'], [subID])
-                    if ('data' in downloadResult) \
-                            and (downloadResult['data']) \
-                            and (len(downloadResult['data']) > 0) \
-                            and ('data' in downloadResult['data'][0]) \
-                            and (downloadResult['data'][0]['data']):
-                        decodedBytes = base64.b64decode(
-                            downloadResult['data'][0]['data'])
-                        decompressed = gzip.decompress(decodedBytes)
-                        if len(decompressed) > 0:
-                            decodedStr = str(
-                                decompressed, subEncoding, 'replace')
-                            byteswritten = open(
-                                subPath, 'w', encoding=subEncoding, errors='replace').write(decodedStr)
-                            if byteswritten > 0:
-                                process_subtitlesDownload = 0
+                    process_subtitlesDownload = subprocess.call(
+                        "(wget -q -O - " + subURL + " | gunzip > " + subPath + ") 2>&1", shell=True)
 
                 # If an error occurs, say so
                 if process_subtitlesDownload != 0:
@@ -973,11 +956,6 @@ except (OSError, IOError, RuntimeError, AttributeError, TypeError, NameError, Ke
                "- Your Internet connection status\n" +
                "- Your download limits (200 subtitles per 24h, 40 subtitles per 10s)\n" +
                "- That are using the latest version of this software ;-)")
-
-except Exception:
-    # Catch unhandled exceptions but do not spawn an error window
-    print("Unexpected error (line " + str(sys.exc_info()
-          [-1].tb_lineno) + "): " + str(sys.exc_info()[0]))
 
 # Disconnect from opensubtitles.org server, then exit
 if session and session['token']:
