@@ -4,14 +4,51 @@
 MONITOR=eDP1
 pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
 
+MODE=mirror
+
+function turn_off {
+    xrandr --output HDMI1 --off
+}
+
+function extend {
+    turn_off
+    xrandr --output HDMI1 --auto --mode 1920x1080 --right-of eDP1
+    dunstify -r 42000 'Extend Display'
+}
+
+function mirror {
+    turn_off
+    xrandr --output HDMI1 --auto --scale-from 1920x1080 --output eDP1
+    dunstify -r 42000 'Mirror Display'
+}
+
+function toggle_mode {
+    if [[ $MODE == 'mirror' ]]; then
+        extend
+        MODE='extend'
+    else
+        mirror
+        MODE='mirror'
+    fi
+    echo "$MODE"
+}
+
+
+trap toggle_mode 10
+
 # functions to switch from eDP1 to HDMI and vice versa
 function ActivateHDMI {
-    xrandr --output HDMI1 --auto --scale-from 1920x1080 --output eDP1
+    if [[ $MODE == 'extend' ]]; then
+        extend
+    else
+        mirror
+    fi
     pacmd set-card-profile 0 output:hdmi-stereo+input:analog-stereo
     MONITOR=HDMI1
 }
 function DeactivateHDMI {
     pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
+    turn_off
     MONITOR=eDP1
 }
 
@@ -36,5 +73,6 @@ do
         DeactivateHDMI
     fi
 
-    sleep 5s
+    sleep 5s &
+    wait $!
 done

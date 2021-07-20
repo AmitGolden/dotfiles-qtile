@@ -7,7 +7,7 @@
 # Material ColorScheme
 
 import psutil
-from typing import List  # noqa: F401
+from typing import List, Tuple  # noqa: F401
 
 from libqtile import bar, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -43,16 +43,27 @@ def window_to_next_group(qtile):
     qtile.current_window.togroup(next_group_name)
 
 
-def kick_to_next_screen(qtile, direction=1):
-    other_scr_index = (qtile.screens.index(
-        qtile.currentScreen) + direction) % len(qtile.screens)
-    othergroup = None
-    for group in qtile.cmd_groups().values():
-        if group['screen'] == other_scr_index:
-            othergroup = group['name']
-            break
-    if othergroup:
-        qtile.moveToGroup(othergroup)
+@lazy.function
+def window_to_prev_screen(qtile):
+    i = qtile.screens.index(qtile.current_screen)
+    if i != 0:
+        group = qtile.screens[i - 1].group.name
+        qtile.current_window.togroup(group)
+
+
+@lazy.function
+def window_to_next_screen(qtile):
+    i = qtile.screens.index(qtile.current_screen)
+    if i + 1 != len(qtile.screens):
+        group = qtile.screens[i + 1].group.name
+        qtile.current_window.togroup(group)
+
+
+@lazy.function
+def switch_screens(qtile):
+    i = qtile.screens.index(qtile.current_screen)
+    group = qtile.screens[i - 1].group
+    qtile.current_screen.set_group(group)
 
 
 keys = [
@@ -128,12 +139,22 @@ keys = [
     Key([mod], "o", lazy.screen.next_group()),
     Key([mod, "shift"], "i", window_to_prev_group, lazy.screen.prev_group()),
     Key([mod, "shift"], "o", window_to_next_group, lazy.screen.next_group()),
-    # Key([mod], "o", lazy.function(kick_to_next_screen)),
-    # Key([mod, "shift"], "o", lazy.function(kick_to_next_screen, -1)),
-    Key([mod, "control", "shift"], "o", lazy.function(kick_to_next_screen)),
-    Key([mod, "control", "shift"], "i", lazy.function(kick_to_next_screen, -1)),
+
+    # Screens
+    Key([mod, "shift"], "period", window_to_next_screen),
+    Key([mod, "shift"], "comma", window_to_prev_screen),
+    Key([mod], "period",
+        lazy.next_screen(),
+        desc='Move focus to next monitor'
+        ),
+    Key([mod], "comma",
+        lazy.prev_screen(),
+        desc='Move focus to prev monitor'
+        ),
+    Key([mod], "slash", switch_screens),
 
     Key([mod], "f", lazy.window.toggle_floating(), desc="Toggle floating"),
+    Key([], "F10", lazy.spawn(f"{qtileDir}/misc/toggle_display.sh")),
 
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
@@ -166,15 +187,6 @@ keys = [
         desc="Launch power menu"),
 
     # System
-    # Key(
-    #     [mod, "shift"],
-    #     "p",
-    #     lazy.spawn("poweroff"),
-    #     desc="Powers off the\
-    #     system.",
-    # ),
-    # Key([mod, "shift"], "r", lazy.spawn(
-    #     "reboot"), desc="Reboots the system"),
     Key([], "F9", lazy.spawn(
         f"{qtileDir}/misc/lock.sh"), desc="Locks the system"),
     Key([], "Print", lazy.spawn("flameshot gui"),
@@ -275,7 +287,7 @@ keys.extend(
 # Groups
 # From: https://github.com/AugustoNicola/dotfiles/blob/main/qtile/
 if __name__ in ['config', '__main__']:
-    group_props = [
+    group_props: list[Tuple] = [
         ('Music', {'label': '', 'matches': [Match(wm_class=['spotify'])]}),
         ('Web', {'label': '', 'matches': [Match(wm_class=['brave'])]}),
         ('Programming', {'label': '', 'matches': [Match(wm_class=['code'])]}),
@@ -366,126 +378,129 @@ layouts = [
 ]
 
 
+def init_widgets():
+    widget_list = [
+        # GroupBox
+        widget.Spacer(10),
+        widget.GroupBox(
+            fontsize=20,
+            padding=6,
+            block_highlight_text_color=colors["yellow"],
+            active=colors["white"],
+            inactive=colors["grey"],
+            borderwidth=0,
+        ),
+        widget.Spacer(10),
+
+        # Layout
+        widget.TextBox(
+            text="", padding=6, fontsize=16, foreground=colors["light-grey"]
+        ),
+        widget.CurrentLayout(
+            foreground=colors["light-grey"], fontsize=14),
+        widget.Spacer(10),
+
+        # WindowName
+        widget.TaskList(foreground=colors["white"], icon_size=20, padding=5,
+                        font="FiraCode Nerd Font", fontsize=14, borderwidth=0,
+                        markup_focused='<span weight="bold">{}</span>'),
+        # Systray
+        widget.Systray(icon_size=16, padding=8,),
+        widget.Spacer(5),
+
+        # Caffeine
+        widget.GenPollText(
+            foreground=colors["white"], fontsize=18, padding=5, func=get_caffeine_state, update_interval=1, mouse_callbacks={'Button1': toggle_caffeine}),
+        widget.Spacer(7),
+
+        # Updates
+        widget.CheckUpdates(
+            padding=2,
+            update_interval=1800,
+            distro="Arch_checkupdates",
+            display_format=' {updates}',
+            foreground=colors["purple"],
+            custom_command=f"{qtileDir}/misc/updates-arch-combined.sh",
+            colour_have_updates=colors["purple"], fontsize=16),
+        widget.Spacer(3),
+
+        # Keyboard Layout
+        widget.TextBox(
+            text="", padding=8, foreground=colors["orange"], fontsize=18
+        ),
+        widget.GenPollText(
+            foreground=colors["orange"], fontsize=16, func=get_keyboard_layout, update_interval=0.5),
+        widget.Spacer(3),
+
+        # Battery
+        widget.GenPollText(
+            foreground=colors["white"], fontsize=18, func=get_battery_icon, update_interval=3, padding=5),
+        widget.Battery(
+            foreground=colors["white"],
+            low_foreground=colors["red"],
+            format="{percent:2.0%}",
+            low_percentage=0.15,
+            notify_below=0.15,
+            update_interval=3,
+            show_short_text=False
+        ),
+        widget.Spacer(3),
+
+        # Backlight
+        widget.TextBox(
+            text="", padding=8, foreground=colors["yellow"], fontsize=18
+        ),
+        widget.Backlight(
+            foreground=colors["yellow"],
+            backlight_name="intel_backlight",
+        ),
+        widget.Spacer(3),
+
+        # Volume
+        widget.TextBox(
+            text="墳", foreground=colors["green"], fontsize=17,
+            mouse_callbacks={
+                'Button1': lambda: qtile.cmd_spawn("pavucontrol")},
+            volume_app="pavucontrol"),
+        widget.Volume(foreground=colors["green"],
+                      mouse_callbacks={'Button1': lambda: qtile.cmd_spawn("pavucontrol")},),
+        widget.Spacer(3),
+
+        # Time
+        widget.TextBox(
+            text="", fontsize=18, padding=8, foreground=colors["blue"]
+        ),
+        widget.Clock(
+            foreground=colors["blue"], format="%-H:%M, %-d %b"),
+        widget.Spacer(8),
+        widget.TextBox(text="襤", fontsize=24, padding=4,
+                       foreground=colors["red"], mouse_callbacks={'Button1': lambda: qtile.cmd_spawn(powermenu)}),
+        widget.Spacer(10),
+    ]
+    return widget_list
+
+
+def init_less_widgets():
+    widget_list = init_widgets()
+    del widget_list[-3:-1]
+    return widget_list
+
+
 screens = [
     Screen(
-        # Bar
         top=bar.Bar(
-            [
-                # GroupBox
-                widget.Spacer(10),
-                widget.GroupBox(
-                    fontsize=20,
-                    padding=6,
-                    block_highlight_text_color=colors["yellow"],
-                    active=colors["white"],
-                    inactive=colors["grey"],
-                    borderwidth=0,
-                ),
-                widget.Spacer(10),
-
-                # Layout
-                widget.TextBox(
-                    text="", padding=6, fontsize=16, foreground=colors["light-grey"]
-                ),
-                widget.CurrentLayout(
-                    foreground=colors["light-grey"], fontsize=14),
-                widget.Spacer(10),
-
-                # WindowName
-                # widget.WindowName(
-                #     format="|{state} {name}", max_chars=80, foreground=colors["white"]
-                # ),
-                # widget.TextBox(text="|", fontsize=16,
-                #                foreground=colors["white"]),
-                widget.TaskList(foreground=colors["white"], icon_size=20, padding=5,
-                                font="FiraCode Nerd Font", fontsize=14, borderwidth=0,
-                                markup_focused='<span weight="bold">{}</span>'),
-                # Systray
-                widget.Systray(icon_size=16, padding=8,),
-                widget.Spacer(5),
-
-                # Caffeine
-                widget.GenPollText(
-                    foreground=colors["white"], fontsize=18, padding=5, func=get_caffeine_state, update_interval=1, mouse_callbacks={'Button1': toggle_caffeine}),
-                widget.Spacer(7),
-
-                # Updates
-                widget.CheckUpdates(
-                    padding=2,
-                    update_interval=1800,
-                    distro="Arch_checkupdates",
-                    display_format=' {updates}',
-                    foreground=colors["purple"],
-                    custom_command=f"{qtileDir}/misc/updates-arch-combined.sh",
-                    colour_have_updates=colors["purple"], fontsize=16),
-                widget.Spacer(3),
-
-                # Keyboard Layout
-                widget.TextBox(
-                    text="", padding=8, foreground=colors["orange"], fontsize=18
-                ),
-                widget.GenPollText(
-                    foreground=colors["orange"], fontsize=16, func=get_keyboard_layout, update_interval=0.5),
-                widget.Spacer(3),
-
-                # Battery
-                widget.GenPollText(
-                    foreground=colors["white"], fontsize=18, func=get_battery_icon, update_interval=3, padding=5),
-                widget.Battery(
-                    foreground=colors["white"],
-                    low_foreground=colors["red"],
-                    format="{percent:2.0%}",
-                    low_percentage=0.15,
-                    notify_below=0.15,
-                    update_interval=3,
-                    show_short_text=False
-                ),
-                widget.Spacer(3),
-
-                # Backlight
-                widget.TextBox(
-                    text="", padding=8, foreground=colors["yellow"], fontsize=18
-                ),
-                widget.Backlight(
-                    foreground=colors["yellow"],
-                    backlight_name="intel_backlight",
-                ),
-                widget.Spacer(3),
-
-                # Volume
-                widget.TextBox(
-                    text="墳", foreground=colors["green"], fontsize=17,
-                    mouse_callbacks={
-                        'Button1': lambda: qtile.cmd_spawn("pavucontrol")},
-                    volume_app="pavucontrol"),
-                widget.Volume(foreground=colors["green"],
-                              mouse_callbacks={'Button1': lambda: qtile.cmd_spawn("pavucontrol")},),
-                widget.Spacer(3),
-
-                # Network
-                # widget.TextBox(
-                #     text="直", foreground=colors["cyan"], fontsize=17,  padding=8),
-                # widget.Wlan(foreground=colors["cyan"],
-                #             format="{essid} {percent:2.0%}",
-                #             disconnected_message="--", update_interval=10),
-                # widget.Spacer(3),
-
-                # Time
-                widget.TextBox(
-                    text="", fontsize=18, padding=8, foreground=colors["blue"]
-                ),
-                widget.Clock(
-                    foreground=colors["blue"], format="%-H:%M, %-d %b"),
-                widget.Spacer(8),
-                widget.TextBox(text="襤", fontsize=24, padding=4,
-                               foreground=colors["red"], mouse_callbacks={'Button1': lambda: qtile.cmd_spawn(powermenu)}),
-                widget.Spacer(10),
-            ],
+            init_widgets(),
             32,
             background=colors["background"],
             opacity=0.8
         ),
     ),
+    Screen(top=bar.Bar(
+        init_less_widgets(),
+        32,
+        background=colors["background"],
+        opacity=0.8
+    ),)
 ]
 
 

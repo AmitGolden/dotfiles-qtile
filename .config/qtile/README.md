@@ -20,6 +20,7 @@ redshift
 network-manager-applet
 blueman-applet
 dunst
+imwheel
 
 betterlockscreen
 xss-lock
