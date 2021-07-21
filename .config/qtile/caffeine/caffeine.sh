@@ -6,7 +6,7 @@ isManual=0
 function enable_caffeine {
     if [[ $isActive == 0 ]]; then
         dunstify -r 6969 "Caffeine Enabled"
-        xset s off -dpms
+        killall sleep.sh
         echo 1 > ~/.config/qtile/caffeine/isActive
     fi
     isManual=$1
@@ -16,7 +16,7 @@ function enable_caffeine {
 function disable_caffeine {
     if [[ $isActive == 1 ]]; then
         dunstify -r 6969 "Caffeine Disabled"
-        xset s on dpms
+        ~/.config/qtile/caffeine/sleep.sh &
         echo 0 > ~/.config/qtile/caffeine/isActive
     fi
     isActive=0

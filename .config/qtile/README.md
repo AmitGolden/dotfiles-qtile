@@ -20,14 +20,14 @@ redshift
 network-manager-applet
 blueman-applet
 dunst
-imwheel
 
 betterlockscreen
-xss-lock
+xidlehook
 
 rofi
 jq
 rofi-power-menu
+rofi-calc
 
 Fira Sans
 Fira Code Nerd Font

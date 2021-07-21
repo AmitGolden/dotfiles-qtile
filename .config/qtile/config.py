@@ -185,6 +185,8 @@ keys = [
         desc="Launch password manager"),
     Key([mod], "p", lazy.spawn(powermenu),
         desc="Launch power menu"),
+    Key([mod], "equal", lazy.spawn("rofi -show calc -modi calc -no-show-match -no-sort"),
+        desc="Launch qalculate rofi"),
 
     # System
     Key([], "F9", lazy.spawn(
@@ -388,7 +390,7 @@ def init_widgets():
             block_highlight_text_color=colors["yellow"],
             active=colors["white"],
             inactive=colors["grey"],
-            borderwidth=0,
+            borderwidth=0
         ),
         widget.Spacer(10),
 
