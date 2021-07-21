@@ -22,6 +22,7 @@ blueman-applet
 dunst
 
 betterlockscreen
+xss-lock
 xidlehook
 
 rofi

@@ -14,6 +14,7 @@ feh --bg-scale --randomize ~/Pictures/Wallpapers/* && eval "set -- $(sed 1d "$HO
 picom --config ~/.config/qtile/picom.conf &
 ~/.config/qtile/caffeine/caffeine.sh &
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+xss-lock -- ~/.config/qtile/misc/lock.sh &
 ~/.config/qtile/caffeine/sleep.sh &
 nm-applet &
 blueman-applet &
