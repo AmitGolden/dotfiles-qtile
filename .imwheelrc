@@ -1,4 +1,0 @@
-# Speed up scrolling for the document viewer
-".*?"
-    None, Up, Button4, 3
-    None, Down, Button5, 3
