@@ -8,7 +8,7 @@ xidlehook \
 		'temp=$(xbacklight -get | cut -d. -f1); xbacklight -set $((temp / 2))' \
 		'xbacklight -set 100' \
 	--timer 30 \
-		'xbacklight -set 0; ~/.config/qtile/misc/lock.sh' \
+		'~/.config/qtile/misc/lock.sh; xbacklight -set 0' \
 		'xbacklight -set 100' \
 	--timer 3600 \
 		'systemctl suspend' \
