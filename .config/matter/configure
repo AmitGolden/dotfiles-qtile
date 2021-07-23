@@ -1,0 +1,5 @@
+#!/bin/bash
+
+./matter.py -i arch microsoft-windows cog _ _ _ _ _ \
+        -fg white -bg black -hl c4c4c4 \
+        -ff FiraCode.ttf -fn FiraCode Nerd Font Mono
