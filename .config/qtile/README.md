@@ -12,6 +12,8 @@ feh
 picom-ibhagwan
 xkill
 
+libinput-multiplier
+
 pavucontrol
 polkit-gnome
 gnome-keyring
@@ -40,4 +42,3 @@ paper-icons-cursor
 # System tweaks
 
 iwd
-libinput-multiplier (set multiplier to 2)

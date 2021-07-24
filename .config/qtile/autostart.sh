@@ -7,6 +7,8 @@ killall caffeine.sh
 # killall polkit-gnome-authentication-agent-1
 # killall dunst
 
+echo 2 > /tmp/libinput_discrete_deltay_multiplier &
+
 # gnome-keyring-daemon -d &
 ~/.config/qtile/misc/display_handler.sh &
 setxkbmap -layout "us,il" -option "grp:alt_shift_toggle" &
