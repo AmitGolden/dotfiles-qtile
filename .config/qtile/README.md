@@ -36,3 +36,8 @@ Fira Code Nerd Font
 materia-gtk
 papirus-icons
 paper-icons-cursor
+
+# System tweaks
+
+iwd
+libinput-multiplier (set multiplier to 2)
