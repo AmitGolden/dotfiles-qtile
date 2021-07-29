@@ -12,7 +12,7 @@ function turn_off {
 
 function extend {
     turn_off
-    xrandr --output HDMI1 --auto --mode 1920x1080 --right-of eDP1
+    xrandr --output HDMI1 --mode 1920x1200 --right-of eDP1
     dunstify -r 42000 'Extend Display'
 }
 

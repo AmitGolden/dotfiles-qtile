@@ -6,17 +6,14 @@
 #
 # Material ColorScheme
 
-import psutil
-from typing import List, Tuple  # noqa: F401
-
-from libqtile import bar, layout, widget
-from libqtile.config import Click, Drag, Group, Key, Match, Screen
-from libqtile.lazy import lazy
-from libqtile import qtile
-
 import os
 import subprocess
-from libqtile import hook
+from typing import List, Tuple  # noqa: F401
+
+import psutil
+from libqtile import bar, hook, layout, qtile, widget
+from libqtile.config import Click, Drag, Group, Key, Match, Screen
+from libqtile.lazy import lazy
 
 from battery import get_battery_icon
 
@@ -141,8 +138,8 @@ keys = [
     Key([mod, "shift"], "o", window_to_next_group, lazy.screen.next_group()),
 
     # Screens
-    Key([mod, "shift"], "period", window_to_next_screen),
-    Key([mod, "shift"], "comma", window_to_prev_screen),
+    Key([mod, "shift"], "period", window_to_next_screen, lazy.next_screen()),
+    Key([mod, "shift"], "comma", window_to_prev_screen, lazy.prev_screen()),
     Key([mod], "period",
         lazy.next_screen(),
         desc='Move focus to next monitor'
@@ -482,12 +479,6 @@ def init_widgets():
     return widget_list
 
 
-def init_less_widgets():
-    widget_list = init_widgets()
-    del widget_list[-3:-1]
-    return widget_list
-
-
 screens = [
     Screen(
         top=bar.Bar(
@@ -498,7 +489,7 @@ screens = [
         ),
     ),
     Screen(top=bar.Bar(
-        init_less_widgets(),
+        init_widgets(),
         32,
         background=colors["background"],
         opacity=0.8
