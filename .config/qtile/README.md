@@ -24,7 +24,6 @@ blueman-applet
 dunst
 
 betterlockscreen
-xss-lock
 xidlehook
 
 rofi
@@ -42,3 +41,7 @@ paper-icons-cursor
 # System tweaks
 
 iwd
+
+# Systemd Services
+
+lock.service

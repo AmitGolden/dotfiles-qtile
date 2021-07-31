@@ -1,8 +1,5 @@
 #!/bin/bash
-
-isActive=$(cat ~/.config/qtile/caffeine/isActive)
-
-if [[ $isActive == 1 ]]; then
+if (! pidof xidlehook >> /dev/null); then
 	echo 
 else
 	echo ﯈
