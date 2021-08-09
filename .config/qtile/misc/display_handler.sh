@@ -13,12 +13,14 @@ function turn_off {
 function extend {
     turn_off
     xrandr --output HDMI1 --mode 1920x1200 --right-of eDP1
+    pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
     dunstify -r 42000 'Extend Display'
 }
 
 function mirror {
     turn_off
     xrandr --output HDMI1 --auto --scale-from 1920x1080 --output eDP1
+    pacmd set-card-profile 0 output:hdmi-stereo+input:analog-stereo
     dunstify -r 42000 'Mirror Display'
 }
 
@@ -43,7 +45,6 @@ function ActivateHDMI {
     else
         mirror
     fi
-    pacmd set-card-profile 0 output:hdmi-stereo+input:analog-stereo
     MONITOR=HDMI1
 }
 function DeactivateHDMI {

@@ -12,4 +12,4 @@ xidlehook \
 		'xbacklight -set 100' \
 	--timer 3600 \
 		'systemctl suspend' \
-		''
+		'xbacklight -set 100'
