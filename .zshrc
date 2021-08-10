@@ -72,15 +72,6 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS"
 
 precmd () {print -Pn "\033]0;${PWD}\007"}
 
-function install {
-	if pacman -Ss "^$argv\$" > /dev/null
-	then
-		sudo powerpill -S "$argv"
-	else
-		paru --aur -S "$argv"
-	fi
-}
-
 bindkey -v
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
