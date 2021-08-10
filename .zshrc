@@ -50,7 +50,7 @@ alias cat='bat'
 alias nvim='~/.config/qtile/misc/nvim.sh'
 alias vim='nvim'
 alias sudo='sudo '
-alias update='sudo pacman -Sy && sudo powerpill -Su && paru --aur -Su'
+alias update='paru -Syu'
 alias checkupdates='checkupdates && paru -Qua'
 alias removeOrphans='pacman -Qtdq | sudo pacman -Rns -'
 alias teamviewer='sudo teamviewer --daemon start && teamviewer && sudo teamviewer --daemon stop'
@@ -90,6 +90,7 @@ bindkey '^[[3;5~' kill-word
 autoload -z edit-command-line
 zle -N edit-command-line
 bindkey -M vicmd v edit-command-line
+bindkey '^R' history-incremental-search-backward
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000000
@@ -106,12 +107,22 @@ export BAT_THEME=base16
 export GDK_CORE_DEVICE_EVENTS=1
 
 export BW_SESSION="ifIGi83yNlBdU6T9YH7TES/YIXIoYeu1NH9pBJ7WHXh8jZ/Ggud3AWxtsVAAe9XkTmS+2AsoAQ2p/6tCGS7m/g=="
+
+export PATH=/home/amitgold/.local/bin:$PATH
+
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+if [ -n "$PYTHONPATH" ]; then
+    export PYTHONPATH='/usr/lib/python3.9/site-packages/pdm/pep582':$PYTHONPATH
+else
+    export PYTHONPATH='/usr/lib/python3.9/site-packages/pdm/pep582'
+fi
+
 ``
 source ~/.config/zsh/ranger-autojump.plugin.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 source /usr/share/autojump/autojump.zsh 2>/dev/null
 source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
