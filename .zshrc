@@ -45,7 +45,6 @@ alias ls='exa --icons --color=auto'
 alias ll='ls -alhF'
 alias lt='ls -thF'
 alias grep='grep --color=auto'
-# alias find='fd'
 alias cat='bat'
 alias nvim='~/.config/qtile/misc/nvim.sh'
 alias vim='nvim'
@@ -115,4 +114,5 @@ source /usr/share/zsh/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
 eval "$(zoxide init zsh)"
+source /usr/share/zsh/plugins/fzf-tab-git/fzf-tab.zsh 2>/dev/null
 source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
