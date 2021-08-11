@@ -57,6 +57,7 @@ alias teamviewer='sudo teamviewer --daemon start && teamviewer && sudo teamviewe
 alias gitrelease='git push && git checkout master && git merge develop && git push && git checkout develop'
 alias xclip="xclip -selection c"
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias j="z"
 
 alias ugit='~/.local/bin/ugit'
 alias sub='~/.local/bin/OpenSubtitlesDownload.py'
@@ -72,16 +73,19 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS"
 
 precmd () {print -Pn "\033]0;${PWD}\007"}
 
+
 bindkey -v
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
+
+source ~/.config/zsh/autopair.zsh                                 
+autopair-init
+
 bindkey '^H' backward-kill-word
 bindkey '^[[3;5~' kill-word
 
-autoload -z edit-command-line
-zle -N edit-command-line
-bindkey -M vicmd v edit-command-line
 bindkey '^R' history-incremental-search-backward
+
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000000
@@ -105,15 +109,10 @@ export PATH=/home/amitgold/.local/bin:$PATH
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-if [ -n "$PYTHONPATH" ]; then
-    export PYTHONPATH='/usr/lib/python3.9/site-packages/pdm/pep582':$PYTHONPATH
-else
-    export PYTHONPATH='/usr/lib/python3.9/site-packages/pdm/pep582'
-fi
-
-``
-source ~/.config/zsh/ranger-autojump.plugin.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
-source /usr/share/autojump/autojump.zsh 2>/dev/null
+source /usr/share/zsh/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+source /usr/share/fzf/key-bindings.zsh
+source /usr/share/fzf/completion.zsh
+eval "$(zoxide init zsh)"
 source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
