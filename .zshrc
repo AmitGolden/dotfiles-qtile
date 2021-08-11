@@ -68,7 +68,7 @@ function confup {
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS"
 	--color fg:-1,bg:-1,hl:230,fg+:3,bg+:233,hl+:229
 	--color info:150,prompt:110,spinner:150,pointer:167,marker:174
-	--ansi --preview-window 'right:60%' --layout reverse --margin=1,4 --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
+	--reverse"
 
 precmd () {print -Pn "\033]0;${PWD}\007"}
 
@@ -83,7 +83,7 @@ autopair-init
 bindkey '^H' backward-kill-word
 bindkey '^[[3;5~' kill-word
 
-bindkey '^R' history-incremental-search-backward
+local WORDCHARS='*?_[]~=&;!#$%^(){}<>'
 
 
 HISTFILE=~/.zsh_history
@@ -111,8 +111,7 @@ export PATH=/home/amitgold/.local/bin:$PATH
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 source /usr/share/zsh/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-source /usr/share/fzf/key-bindings.zsh
-source /usr/share/fzf/completion.zsh
+zvm_after_init_commands+=('source /usr/share/fzf/completion.zsh && source /usr/share/fzf/key-bindings.zsh')
 eval "$(zoxide init zsh)"
 source /usr/share/zsh/plugins/fzf-tab-git/fzf-tab.zsh 2>/dev/null
 source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
