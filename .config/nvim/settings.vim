@@ -41,6 +41,8 @@ set confirm
 set backupdir=~/.cache/vim
 set incsearch
 set guifont=FiraCode\ Nerd\ Font\ 12
+" set sidescrolloff=999
+" set scrolloff=999
 
 set shell=/bin/zsh
 
