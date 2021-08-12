@@ -67,6 +67,16 @@ function confup {
 	config commit -m "update" && config push
 }
 
+function aliasexp {
+  if [[ $ZSH_VERSION ]]; then
+    # shellcheck disable=2154  # aliases referenced but not assigned
+    [ ${aliases[$1]+x} ] && printf '%s\n' "${aliases[$1]}" && return
+  else  # bash
+    [ "${BASH_ALIASES[$1]+x}" ] && printf '%s\n' "${BASH_ALIASES[$1]}" && return
+  fi
+  false  # Error: alias not defined
+}
+
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS"
 	--color fg:-1,bg:-1,hl:230,fg+:3,bg+:233,hl+:229
 	--color info:150,prompt:110,spinner:150,pointer:167,marker:174
