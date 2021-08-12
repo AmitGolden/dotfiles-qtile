@@ -50,12 +50,9 @@ alias nvim='~/.config/qtile/misc/nvim.sh'
 alias vim='nvim'
 alias sudo='sudo '
 alias update='sudo pacman -Sy && sudo powerpill -Su && paru -Su'
-zvm_after_init_commands+=('source /usr/share/fzf/completion.zsh && source /usr/share/fzf/key-bindings.zsh')
-zvm_after_init_commands+=('source /usr/share/fzf/completion.zsh && source /usr/share/fzf/key-bindings.zsh')
 alias checkupdates='checkupdates && paru -Qua'
 alias removeOrphans='pacman -Qtdq | sudo pacman -Rns -'
 alias teamviewer='sudo teamviewer --daemon start && teamviewer && sudo teamviewer --daemon stop'
-alias gitrelease='git push && git checkout master && git merge develop && git push && git checkout develop'
 alias xclip="xclip -selection c"
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias j="z"
@@ -75,6 +72,11 @@ function aliasexp {
     [ "${BASH_ALIASES[$1]+x}" ] && printf '%s\n' "${BASH_ALIASES[$1]}" && return
   fi
   false  # Error: alias not defined
+}
+
+function gitrelease {
+	MASTER=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
+	git push && git checkout $MASTER && git merge develop && git push && git checkout develop
 }
 
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS"
