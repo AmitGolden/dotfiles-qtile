@@ -94,6 +94,10 @@ bindkey "^[[1;5D" backward-word
 source ~/.config/zsh/autopair.zsh                                 
 autopair-init
 
+function zvm_config {
+	ZVM_KEYTIMEOUT=0.2
+}
+
 bindkey '^H' backward-kill-word
 bindkey '^[[3;5~' kill-word
 
