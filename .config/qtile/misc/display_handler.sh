@@ -6,13 +6,23 @@ pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
 
 MODE=mirror
 
+# functions to check if HDMI is connected and in use
+function HDMIActive {
+    [ $MONITOR = "HDMI1" ]
+}
+function HDMIConnected {
+    ! xrandr | grep "^HDMI1" | grep disconnected
+}
+
+
 function turn_off {
     xrandr --output HDMI1 --off
 }
 
 function extend {
     turn_off
-    xrandr --output HDMI1 --mode 1920x1200 --right-of eDP1
+    # xrandr --output HDMI1 --mode 1920x1200 --right-of eDP1
+    xrandr --output HDMI1 --auto --scale-from 1920x1080 --right-of eDP1
     pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
     dunstify -r 42000 'Extend Display'
 }
@@ -25,12 +35,14 @@ function mirror {
 }
 
 function toggle_mode {
-    if [[ $MODE == 'mirror' ]]; then
-        extend
-        MODE='extend'
-    else
-        mirror
-        MODE='mirror'
+    if HDMIActive; then
+        if [[ $MODE == 'mirror' ]]; then
+            extend
+            MODE='extend'
+        else
+            mirror
+            MODE='mirror'
+        fi
     fi
     echo "$MODE"
 }
@@ -45,20 +57,13 @@ function ActivateHDMI {
     else
         mirror
     fi
+    (eval "set -- $(sed 1d "$HOME/.fehbg")" && betterlockscreen -u $4)&
     MONITOR=HDMI1
 }
 function DeactivateHDMI {
     pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
     turn_off
     MONITOR=eDP1
-}
-
-# functions to check if HDMI is connected and in use
-function HDMIActive {
-    [ $MONITOR = "HDMI1" ]
-}
-function HDMIConnected {
-    ! xrandr | grep "^HDMI1" | grep disconnected
 }
 
 # actual script
