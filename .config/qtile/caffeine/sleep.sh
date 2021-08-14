@@ -1,5 +1,6 @@
 #!/bin/bash
 
+xset s off
 xidlehook \
 	--not-when-fullscreen \
 	--not-when-audio \
