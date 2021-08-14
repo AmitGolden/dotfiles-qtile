@@ -58,9 +58,6 @@ alias xclip="xclip -selection c"
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias j="z"
 
-alias ugit='~/.local/bin/ugit'
-alias sub='~/.local/bin/OpenSubtitlesDownload.py'
-
 function confup {
 	config commit -m "update" && config push
 }
