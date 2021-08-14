@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-betterlockscreen -l blur --off 60
+betterlockscreen -l blur --off 60 &
