@@ -1,5 +1,6 @@
 # configuration file for betterlockscreen
 
+fx_list=(blur)
 insidecolor=00000000
 ringcolor=ffffffff
 keyhlcolor=C3E88D
