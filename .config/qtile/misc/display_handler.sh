@@ -21,10 +21,11 @@ function turn_off {
 
 function extend {
     turn_off
-    # xrandr --output HDMI1 --mode 1920x1200 --right-of eDP1
-    xrandr --output HDMI1 --auto --scale-from 1920x1080 --right-of eDP1
+    xrandr --output HDMI1 --mode 1920x1200 --right-of eDP1
+    # xrandr --output HDMI1 --auto --scale-from 1920x1080 --right-of eDP1
     pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
     dunstify -r 42000 'Extend Display'
+    ~/.config/qtile/misc/random_wallpaper.sh &
 }
 
 function mirror {
@@ -32,6 +33,7 @@ function mirror {
     xrandr --output HDMI1 --auto --scale-from 1920x1080 --output eDP1
     pacmd set-card-profile 0 output:hdmi-stereo+input:analog-stereo
     dunstify -r 42000 'Mirror Display'
+    ~/.config/qtile/misc/random_wallpaper.sh &
 }
 
 function toggle_mode {
@@ -57,7 +59,6 @@ function ActivateHDMI {
     else
         mirror
     fi
-    (eval "set -- $(sed 1d "$HOME/.fehbg")" && betterlockscreen -u $4)&
     MONITOR=HDMI1
 }
 function DeactivateHDMI {
