@@ -21,8 +21,8 @@ function turn_off {
 
 function extend {
     turn_off
-    xrandr --output HDMI1 --mode 1920x1200 --right-of eDP1
-    # xrandr --output HDMI1 --auto --scale-from 1920x1080 --right-of eDP1
+    # xrandr --output HDMI1 --mode 1920x1200 --right-of eDP1
+    xrandr --output HDMI1 --preferred --right-of eDP1
     pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
     dunstify -r 42000 'Extend Display'
     ~/.config/qtile/misc/random_wallpaper.sh &

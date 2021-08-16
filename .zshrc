@@ -57,6 +57,7 @@ alias teamviewer='sudo teamviewer --daemon start && teamviewer && sudo teamviewe
 alias xclip="xclip -selection c"
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias j="z"
+alias ji="zi"
 
 function confup {
 	config commit -m "update" && config push
@@ -81,6 +82,13 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS"
 	--color fg:-1,bg:-1,hl:230,fg+:3,bg+:233,hl+:229
 	--color info:150,prompt:110,spinner:150,pointer:167,marker:174
 	--reverse"
+export LESS_TERMCAP_mb=$'\e[1;32m'
+export LESS_TERMCAP_md=$'\e[1;32m'
+export LESS_TERMCAP_me=$'\e[0m'
+export LESS_TERMCAP_se=$'\e[0m'
+export LESS_TERMCAP_so=$'\e[01;33m'
+export LESS_TERMCAP_ue=$'\e[0m'
+export LESS_TERMCAP_us=$'\e[1;4;31m'
 
 precmd () {print -Pn "\033]0;${PWD}\007"}
 
