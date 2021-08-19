@@ -58,6 +58,9 @@ alias xclip="xclip -selection c"
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias j="z"
 alias ji="zi"
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
 
 function confup {
 	config commit -m "update" && config push
@@ -107,7 +110,9 @@ function zvm_config {
 bindkey '^H' backward-kill-word
 bindkey '^[[3;5~' kill-word
 
-local WORDCHARS='*?_[]~=&;!#$%^(){}<>'
+# local WORDCHARS='*?_[]~=&;!#$%^(){}<>'
+autoload -U select-word-style
+select-word-style bash
 
 
 HISTFILE=~/.zsh_history

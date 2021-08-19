@@ -62,7 +62,7 @@ osd_language = 'en'
 #    > Ex: opt_languages = ['eng,fre']
 # 3/ Search for subtitles in several languages (separately, select one of each) by using multiple codes separated by a comma:
 #    > Ex: opt_languages = ['eng','fre']
-opt_languages = ['heb,eng']
+opt_languages = ['heb']
 
 # Write language code (ex: _en) at the end of the subtitles file. 'on', 'off' or 'auto'.
 # If you are regularly searching for several language at once, you sould use 'on'.
