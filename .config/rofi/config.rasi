@@ -1,19 +1,17 @@
-// Config
-
 configuration {
-	modi: "drun,window,run,combi";
-	cycle: true;
-	show-icons: true;
-	display-drun: "";
-	display-window: "";
-	matching: "glob";
-	lines: 8;
-	columns: 1;
-	width: 560;
-	location: 0;
-	padding: 50;
-	font: "FiraCode Nerd Font Mono 14";
-	hide-scrollbar: true;
-	theme: "javacafe";
-	display-combi: "rofi";
+    modi: "drun,window,run,combi,calc";
+    cycle: true;
+    show-icons: true;
+    display-drun: "";
+    display-window: "";
+    matching: "fuzzy";
+    // lines: 8;
+    // columns: 1;
+    // width: 560;
+    // location: 0;
+    // padding: 50;
+    font: "FiraCode Nerd Font Mono 14";
+    sidebar-mode: false;
+    theme: "javacafe";
+    display-combi: "rofi";
 }

@@ -1,50 +1,56 @@
 * {
-    javacafe0:                       #1A1A1A;
-    javacafe1:                       #F07178;
-    javacafe2:                       #C3E88D;
-    javacafe3:                       #FFCB6B;
-    javacafe4:                       #82AAFF;
-    javacafe5:                       #C792EA;
-    javacafe6:                       #89DDFF;
-    javacafe7:                       #ffffff;
-    javacafe8:                       #4A4A4A;
-    javacafe9:                       #F07178;
-    javacafe10:                      #C3E88D;
-    javacafe11:                      #FFCB6B;
-    javacafe12:                      #82AAFF;
-    javacafe13:                      #C792EA;
-    javacafe14:                      #89DDFF;
-    javacafe15:                      #ffffff;
-    background:                  #212121;
-    foreground:                  @javacafe15;
-    selected-normal-foreground:  @javacafe4;
-    normal-foreground:           @foreground;
+    javacafe0: #1a1a1a;
+    javacafe1: #f07178;
+    javacafe2: #c3e88d;
+    javacafe3: #ffcb6b;
+    javacafe4: #82aaff;
+    javacafe5: #c792ea;
+    javacafe6: #89ddff;
+    javacafe7: #ffffff;
+    javacafe8: #4a4a4a;
+    javacafe9: #f07178;
+    javacafe10: #c3e88d;
+    javacafe11: #ffcb6b;
+    javacafe12: #82aaff;
+    javacafe13: #c792ea;
+    javacafe14: #89ddff;
+    javacafe15: #ffffff;
+    background: #212121;
+    foreground: @javacafe15;
+    selected-normal-foreground: @javacafe4;
+    normal-foreground: @foreground;
     alternate-normal-background: @background;
-    selected-urgent-foreground:  @javacafe4;
-    urgent-foreground:           @foreground;
+    selected-urgent-foreground: @javacafe4;
+    urgent-foreground: @foreground;
     alternate-urgent-background: @javacafe0;
-    active-foreground:           @foreground;
-    selected-active-foreground:  @foreground;
+    active-foreground: @foreground;
+    selected-active-foreground: @foreground;
     alternate-active-background: @background;
-    bordercolor:                 @javacafe0;
+    bordercolor: @javacafe0;
     alternate-normal-foreground: @foreground;
-    normal-background:           @background;
-    selected-normal-background:  @javacafe0;
-    border-color:                @javacafe7;
-    spacing:                     1;
-    separatorcolor:              @javacafe8;
-    urgent-background:           @background;
-    selected-urgent-background:  @javacafe3;
+    normal-background: @background;
+    selected-normal-background: @javacafe0;
+    border-color: @javacafe7;
+    spacing: 1;
+    separatorcolor: @javacafe8;
+    urgent-background: @background;
+    selected-urgent-background: @javacafe3;
     alternate-urgent-foreground: @urgent-foreground;
-    background-color:            @background;
+    background-color: @background;
     alternate-active-foreground: @active-foreground;
-    active-background:           @background;
-    selected-active-background:  @javacafe3;
+    active-background: @background;
+    selected-active-background: @javacafe3;
 }
 
 element-icon {
     size: 1.65ch;
     padding: 0 10;
+    background-color: inherit;
+}
+
+element-text {
+    background-color: inherit;
+    text-color: inherit;
 }
 
 #window {
@@ -61,9 +67,9 @@ element-icon {
 }
 
 #message {
-    border:       4px 4px 4px ;
+    border: 4px 4px 4px;
     border-color: @separatorcolor;
-    padding:      20 ;
+    padding: 20;
 }
 
 #textbox {
@@ -72,85 +78,85 @@ element-icon {
 
 #listview {
     fixed-height: 0;
-    padding:	  5 2 2;
-    spacing:      5px ;
+    padding: 5 2 2;
+    spacing: 5px;
 }
 
 #element {
-    border:  0;
-    padding: 10px ;
+    border: 0;
+    padding: 10px;
 }
 
 #element.normal.normal {
     background-color: @normal-background;
-    text-color:       @normal-foreground;
+    text-color: @normal-foreground;
 }
 
 #element.normal.urgent {
     background-color: @urgent-background;
-    text-color:       @urgent-foreground;
+    text-color: @urgent-foreground;
 }
 
 #element.normal.active {
     background-color: @active-background;
-    text-color:       @active-foreground;
+    text-color: @active-foreground;
 }
 
 #element.selected.normal {
     border-radius: 6;
     background-color: @selected-normal-background;
-    text-color:       @selected-normal-foreground;
+    text-color: @selected-normal-foreground;
 }
 
 #element.selected.urgent {
     background-color: @selected-urgent-background;
-    text-color:       @selected-urgent-foreground;
+    text-color: @selected-urgent-foreground;
 }
 
 #element.selected.active {
     background-color: @selected-active-background;
-    text-color:       @selected-active-foreground;
+    text-color: @selected-active-foreground;
 }
 
 #element.alternate.normal {
     background-color: @alternate-normal-background;
-    text-color:       @alternate-normal-foreground;
+    text-color: @alternate-normal-foreground;
 }
 
 #element.alternate.urgent {
     background-color: @alternate-urgent-background;
-    text-color:       @alternate-urgent-foreground;
+    text-color: @alternate-urgent-foreground;
 }
 
 #element.alternate.active {
     background-color: @alternate-active-background;
-    text-color:       @alternate-active-foreground;
+    text-color: @alternate-active-foreground;
 }
 
 #button.selected {
     background-color: @selected-normal-background;
-    text-color:       @selected-normal-foreground;
+    text-color: @selected-normal-foreground;
 }
 
 #inputbar {
-    spacing:    5;
+    spacing: 5;
     text-color: @normal-foreground;
-    padding:    5px ;
-    border:	0 0 2;
+    padding: 5px;
+    border: 0 0 2;
     border-color: @separatorcolor;
 }
 
 #case-indicator {
-    spacing:    0;
+    spacing: 0;
     text-color: @normal-foreground;
 }
 
 #entry {
-    spacing:    0;
+    spacing: 0;
     text-color: @normal-foreground;
 }
 
 #prompt {
-    spacing:    3;
+    spacing: 3;
     text-color: @javacafe6;
 }
