@@ -407,7 +407,11 @@ keys.extend(
         Key(
             [mod],
             "x",
-            lazy.spawn("sh -c 'echo \"" + show_keys() + '" | rofi -dmenu -i -p "?"\''),
+            lazy.spawn(
+                "sh -c 'echo \""
+                + show_keys()
+                + '" | rofi -dmenu -theme big -i -p "?"\''
+            ),
             desc="Show keyboard bindings",
         ),
     ]
@@ -636,7 +640,7 @@ def init_widgets():
         widget.Spacer(3),
         # Time
         widget.TextBox(text="", fontsize=18, padding=8, foreground=colors["blue"]),
-        widget.Clock(foreground=colors["blue"], format="%-H:%M, %-d %b"),
+        widget.Clock(foreground=colors["blue"], format="%H:%M, %-d %b"),
         widget.Spacer(8),
         widget.TextBox(
             text="襤",

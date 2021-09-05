@@ -12,6 +12,6 @@ configuration {
     // padding: 50;
     font: "FiraCode Nerd Font Mono 14";
     sidebar-mode: false;
-    theme: "javacafe";
+    theme: "javacafe-material";
     display-combi: "rofi";
 }

@@ -1,50 +1,52 @@
 * {
-    javacafe0: #1a1a1a;
-    javacafe1: #f07178;
-    javacafe2: #c3e88d;
-    javacafe3: #ffcb6b;
-    javacafe4: #82aaff;
-    javacafe5: #c792ea;
-    javacafe6: #89ddff;
-    javacafe7: #ffffff;
-    javacafe8: #4a4a4a;
-    javacafe9: #f07178;
-    javacafe10: #c3e88d;
-    javacafe11: #ffcb6b;
-    javacafe12: #82aaff;
-    javacafe13: #c792ea;
-    javacafe14: #89ddff;
-    javacafe15: #ffffff;
+    material0: #1a1a1a;
+    material1: #f07178;
+    material2: #c3e88d;
+    material3: #ffcb6b;
+    material4: #82aaff;
+    material5: #c792ea;
+    material6: #89ddff;
+    material7: #ffffff;
+    material8: #4a4a4a;
+    material9: #f07178;
+    material10: #c3e88d;
+    material11: #ffcb6b;
+    material12: #82aaff;
+    material13: #c792ea;
+    material14: #89ddff;
+    material15: #ffffff;
     background: #212121;
-    foreground: @javacafe15;
-    selected-normal-foreground: @javacafe4;
+    foreground: @material15;
+    selected-normal-foreground: @material4;
     normal-foreground: @foreground;
     alternate-normal-background: @background;
-    selected-urgent-foreground: @javacafe4;
+    selected-urgent-foreground: @material4;
     urgent-foreground: @foreground;
-    alternate-urgent-background: @javacafe0;
+    alternate-urgent-background: @material0;
     active-foreground: @foreground;
     selected-active-foreground: @foreground;
     alternate-active-background: @background;
-    bordercolor: @javacafe0;
+    bordercolor: @material0;
     alternate-normal-foreground: @foreground;
     normal-background: @background;
-    selected-normal-background: @javacafe0;
-    border-color: @javacafe7;
+    selected-normal-background: @material0;
+    border-color: @material7;
     spacing: 1;
-    separatorcolor: @javacafe8;
+    separatorcolor: @material8;
     urgent-background: @background;
-    selected-urgent-background: @javacafe3;
+    selected-urgent-background: @material3;
     alternate-urgent-foreground: @urgent-foreground;
     background-color: @background;
     alternate-active-foreground: @active-foreground;
     active-background: @background;
-    selected-active-background: @javacafe3;
+    selected-active-background: @material3;
 }
 
 element-icon {
     size: 1.65ch;
     padding: 0 10;
+    horizontal-align: 0.5;
+    vertical-align: 0.5;
     background-color: inherit;
 }
 
@@ -55,10 +57,13 @@ element-text {
 
 #window {
     background-color: @background;
+    transparency: "real";
     padding: 30;
-    border-color: @javacafe0;
+    border-color: @material0;
     border: 2px 2px 2px;
-    border-radius: 10px;
+    border-radius: 7px;
+    width: 30%;
+    height: 50%;
 }
 
 #mainbox {
@@ -158,5 +163,5 @@ element-text {
 
 #prompt {
     spacing: 3;
-    text-color: @javacafe6;
+    text-color: @material6;
 }
