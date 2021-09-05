@@ -231,6 +231,12 @@ keys = [
         desc="Toggle Redshift",
     ),
     Key([mod, "shift"], "c", lazy.spawn(toggle_caffeine_path), desc="Toggle Caffeine"),
+    Key(
+        [mod, "shift"],
+        "b",
+        lazy.spawn(f"{qtileDir}/misc/toggle_bluetooth.sh"),
+        desc="Toggle bluetooth",
+    ),
     # Brightness
     Key(
         [],
