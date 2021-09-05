@@ -62,6 +62,7 @@ element-text {
     border-color: @material0;
     border: 2px 2px 2px;
     border-radius: 7px;
+    width: 55%;
 }
 
 #mainbox {
