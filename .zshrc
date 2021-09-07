@@ -103,22 +103,23 @@ bindkey "^[[1;5D" backward-word
 source ~/.config/zsh/autopair.zsh                                 
 autopair-init
 
-function zvm_config {
-	ZVM_KEYTIMEOUT=0.2
-}
+ZVM_KEYTIMEOUT=0.1
+ZVM_VI_HIGHLIGHT_BACKGROUND=white
+ZVM_VI_HIGHLIGHT_FOREGROUND=black
 
 bindkey '^H' backward-kill-word
 bindkey '^[[3;5~' kill-word
 
-# local WORDCHARS='*?_[]~=&;!#$%^(){}<>'
+#local WORDCHARS='*?_[]~=&;!#$%^(){}<>'
 autoload -U select-word-style
 select-word-style bash
-
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000000
 SAVEHIST=10000000
 KEYTIMEOUT=5
+
+unset LINES; unset COLUMNS;
 
 export EDITOR=nvim
 export VISUAL=nvim
@@ -132,7 +133,6 @@ export GDK_CORE_DEVICE_EVENTS=1
 export BW_SESSION="ifIGi83yNlBdU6T9YH7TES/YIXIoYeu1NH9pBJ7WHXh8jZ/Ggud3AWxtsVAAe9XkTmS+2AsoAQ2p/6tCGS7m/g=="
 
 export PATH=/home/amitgold/.local/bin:$PATH
-
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

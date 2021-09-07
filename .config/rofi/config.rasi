@@ -4,7 +4,7 @@ configuration {
     show-icons: true;
     display-drun: "";
     display-window: "";
-    matching: "fuzzy";
+    matching: "glob";
     // lines: 8;
     // columns: 1;
     // width: 560;
