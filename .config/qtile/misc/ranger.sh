@@ -1,4 +1,4 @@
 #!/bin/sh
 
 sleep 0.00001
-ranger
+unset LINES; unset COLUMNS; ranger
