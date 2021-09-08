@@ -24,7 +24,7 @@ browser = "brave"
 home = os.path.expanduser("~")
 qtileDir = f"{home}/.config/qtile"
 
-powermenu = "rofi -show p -modi p:rofi-power-menu -width 20 -lines 6"
+powermenu = "rofi -show p -modi p:rofi-power-menu -theme small"
 toggle_caffeine_path = f"{qtileDir}/caffeine/toggle_caffeine.sh"
 
 
@@ -237,6 +237,12 @@ keys = [
         lazy.spawn(f"{qtileDir}/misc/toggle_bluetooth.sh"),
         desc="Toggle bluetooth",
     ),
+    Key(
+        [mod, "shift"],
+        "a",
+        lazy.spawn("pavucontrol"),
+        desc="Launch audio settings",
+    ),
     # Brightness
     Key(
         [],
@@ -350,7 +356,7 @@ keys = [
         lazy.spawn(f"{browser} https://web.whatsapp.com/"),
         desc="Launch WhatsApp Web",
     ),
-    # Music
+    # Media
     Key(
         [alt],
         "semicolon",
