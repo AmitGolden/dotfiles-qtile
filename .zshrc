@@ -5,32 +5,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-#
-# # ex - archive extractor
-# # usage: ex <file>
-ex ()
-{
-  if [ -f $1 ] ; then
-    case $1 in
-      *.tar.bz2)   tar xjf $1   ;;
-      *.tar.gz)    tar xzf $1   ;;
-      *.tar.xz)    tar xJf $1   ;;
-      *.bz2)       bunzip2 $1   ;;
-      *.rar)       unrar x $1     ;;
-      *.gz)        gunzip $1    ;;
-      *.tar)       tar xf $1    ;;
-      *.tbz2)      tar xjf $1   ;;
-      *.tgz)       tar xzf $1   ;;
-      *.zip)       unzip $1     ;;
-      *.Z)         uncompress $1;;
-      *.7z)        7z x $1      ;;
-      *)           echo "'$1' cannot be extracted via ex()" ;;
-    esac
-  else
-    echo "'$1' is not a valid file"
-  fi
-}
-
 # Basic auto/tab complete:
 autoload -U compinit
 zstyle ':completion:*' menu select
@@ -49,7 +23,6 @@ alias cat='bat'
 alias nvim='~/.config/qtile/misc/nvim.sh'
 alias vim='nvim'
 alias sudo='sudo '
-# alias update='sudo pacman -Sy && sudo powerpill -Su && paru -Su'
 alias update='paru -Syu'
 alias checkupdates='checkupdates && paru -Qua'
 alias removeOrphans='pacman -Qtdq | sudo pacman -Rns -'
@@ -81,20 +54,36 @@ function gitrelease {
 	git push && git checkout $MASTER && git merge develop && git push && git checkout develop
 }
 
-export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS"
-	--color fg:-1,bg:-1,hl:230,fg+:3,bg+:233,hl+:229
-	--color info:150,prompt:110,spinner:150,pointer:167,marker:174
-	--reverse"
-export LESS_TERMCAP_mb=$'\e[1;32m'
-export LESS_TERMCAP_md=$'\e[1;32m'
-export LESS_TERMCAP_me=$'\e[0m'
-export LESS_TERMCAP_se=$'\e[0m'
-export LESS_TERMCAP_so=$'\e[01;33m'
-export LESS_TERMCAP_ue=$'\e[0m'
-export LESS_TERMCAP_us=$'\e[1;4;31m'
+#
+# # ex - archive extractor
+# # usage: ex <file>
+ex ()
+{
+  if [ -f $1 ] ; then
+    case $1 in
+      *.tar.bz2)   tar xjf $1   ;;
+      *.tar.gz)    tar xzf $1   ;;
+      *.tar.xz)    tar xJf $1   ;;
+      *.bz2)       bunzip2 $1   ;;
+      *.rar)       unrar x $1     ;;
+      *.gz)        gunzip $1    ;;
+      *.tar)       tar xf $1    ;;
+      *.tbz2)      tar xjf $1   ;;
+      *.tgz)       tar xzf $1   ;;
+      *.zip)       unzip $1     ;;
+      *.Z)         uncompress $1;;
+      *.7z)        7z x $1      ;;
+      *)           echo "'$1' cannot be extracted via ex()" ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
+}
 
+# Window title
 precmd () {print -Pn "\033]0;${PWD}\007"}
 
+# Settings
 
 bindkey -v
 bindkey "^[[1;5C" forward-word
@@ -119,20 +108,10 @@ HISTSIZE=10000000
 SAVEHIST=10000000
 KEYTIMEOUT=5
 
-unset LINES; unset COLUMNS;
 
-export EDITOR=nvim
-export VISUAL=nvim
-export QT_QPA_PLATFORMTHEME=qt5ct #gtk2
-# export QT_STYLE_OVERRIDE=kvantum
-export SHELL=zsh
-export BAT_THEME=base16
-# export TERM=kitty
-export GDK_CORE_DEVICE_EVENTS=1
+# Environment variables
+source ~/.profile
 
-export BW_SESSION="ifIGi83yNlBdU6T9YH7TES/YIXIoYeu1NH9pBJ7WHXh8jZ/Ggud3AWxtsVAAe9XkTmS+2AsoAQ2p/6tCGS7m/g=="
-
-export PATH=/home/amitgold/.local/bin:$PATH
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
