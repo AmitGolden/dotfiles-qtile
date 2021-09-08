@@ -21,6 +21,7 @@ alias lt='ls -thF'
 alias grep='grep --color=auto'
 alias cat='bat'
 alias nvim='~/.config/qtile/misc/nvim.sh'
+alias ranger='~/.config/qtile/misc/ranger.sh'
 alias vim='nvim'
 alias sudo='sudo '
 alias update='paru -Syu'
@@ -111,7 +112,6 @@ KEYTIMEOUT=5
 
 # Environment variables
 source ~/.profile
-
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
