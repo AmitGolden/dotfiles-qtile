@@ -1,0 +1,10 @@
+[user]
+	name = Amit Goldenberg
+	email = amit.wifi@gmail.com
+[credential]
+	helper = store
+[alias]
+	amend = commit --amend --reuse-message=HEAD
+	graph = log --oneline --decorate --all --graph
+	release = "!f(){ MASTER=$(git symbolic-ref refs/remotes/origin/HEAD | sed s@^refs/remotes/origin/@@); git push && git checkout $MASTER && git merge develop && git push && git checkout develop ; };f"
+	clean-merged = "!f(){ git branch --merged | egrep -v '(^\\*|master|main|dev)' | xargs git branch -d && git branch -r --merged | grep -v '* \\|main\\|master\\|dev' | sed 's/origin\\///' | xargs -n 1 git push --delete origin ; };f"
