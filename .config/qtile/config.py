@@ -19,7 +19,7 @@ from battery import get_battery_icon
 
 mod = "mod4"
 alt = "mod1"
-terminal = "kitty"
+terminal = "kitty --single-instance --listen-on unix:/tmp/kitty"
 browser = "brave"
 home = os.path.expanduser("~")
 qtileDir = f"{home}/.config/qtile"

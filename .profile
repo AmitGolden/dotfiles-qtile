@@ -13,6 +13,7 @@ export PATH=/home/amitgold/.local/bin:$PATH
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS"
 	--color fg:-1,bg:-1,hl:230,fg+:3,bg+:233,hl+:229
 	--color info:150,prompt:110,spinner:150,pointer:167,marker:174
+  --height 30%
 	--reverse"
 
 # Colorful man pages
