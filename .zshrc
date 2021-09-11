@@ -35,6 +35,7 @@ alias ji="zi"
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
+alias icat="kitty +kitten icat"
 
 function confup {
 	config commit -m "update" && config push
@@ -96,6 +97,10 @@ autopair-init
 ZVM_KEYTIMEOUT=0.1
 ZVM_VI_HIGHLIGHT_BACKGROUND=white
 ZVM_VI_HIGHLIGHT_FOREGROUND=black
+
+zstyle ':fzf-tab:*' fzf-flags --height 40%
+zstyle ':fzf-tab:complete:*:*' fzf-preview 'less ${(Q)realpath}'
+export LESSOPEN='|~/.lessfilter %s'
 
 bindkey '^H' backward-kill-word
 bindkey '^[[3;5~' kill-word
