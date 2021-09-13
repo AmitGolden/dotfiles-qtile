@@ -12,6 +12,8 @@ zmodload zsh/complist
 compinit
 _comp_options+=(globdots)               # Include hidden files.
 
+nvim_location='~/.config/qtile/misc/nvim.sh'
+
 alias rm='rm -I'
 alias mv='mv -i'
 alias cp='cp -i'
@@ -20,7 +22,7 @@ alias ll='ls -alhF'
 alias lt='ls -thF'
 alias grep='grep --color=auto'
 alias cat='bat'
-alias nvim='~/.config/qtile/misc/nvim.sh'
+alias nvim=$nvim_location
 alias ranger='~/.config/qtile/misc/ranger.sh'
 alias vim='nvim'
 alias sudo='sudo '
@@ -117,6 +119,7 @@ KEYTIMEOUT=5
 
 # Environment variables
 source ~/.profile
+export SHELL=zsh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
