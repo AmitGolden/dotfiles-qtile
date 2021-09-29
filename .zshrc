@@ -28,7 +28,6 @@ alias vim='nvim'
 alias sudo='sudo '
 alias update='paru -Syu'
 alias checkupdates='checkupdates && paru -Qua'
-alias removeorphans='pacman -Qtdq | sudo pacman -Rns -'
 alias teamviewer='sudo teamviewer --daemon start && teamviewer && sudo teamviewer --daemon stop'
 alias xclip="xclip -selection c"
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'

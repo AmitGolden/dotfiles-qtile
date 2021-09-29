@@ -2,8 +2,8 @@
 
 if [[ $TERM == 'xterm-kitty' ]]; then
 	kitty @ set-spacing padding=0
-	nvim $*
+	nvim "$@"
 	kitty @ set-spacing padding=default
 else
-	nvim $*
+	nvim "$@"
 fi

@@ -19,7 +19,7 @@ from battery import get_battery_icon
 
 mod = "mod4"
 alt = "mod1"
-terminal = "kitty --single-instance --listen-on unix:/tmp/kitty"
+terminal = "kitty"
 browser = "brave"
 home = os.path.expanduser("~")
 qtileDir = f"{home}/.config/qtile"
@@ -90,39 +90,40 @@ keys = [
         [mod, "control"],
         "h",
         lazy.layout.grow_left(),
-        # MonadTall
         lazy.layout.shrink_main(),
+        lazy.layout.decrease_ratio(),
+        lazy.layout.add(),
         desc="Grow window to the left",
     ),
     Key(
         [mod, "control"],
         "l",
         lazy.layout.grow_right(),
-        # MonadTall
         lazy.layout.grow_main(),
+        lazy.layout.increase_ratio(),
+        lazy.layout.delete(),
         desc="Grow window to the right",
     ),
     Key(
         [mod, "control"],
         "j",
         lazy.layout.grow_down(),
-        # MonadTall
         lazy.layout.shrink(),
+        lazy.layout.increase_nmaster(),
         desc="Grow window down",
     ),
     Key(
         [mod, "control"],
         "k",
         lazy.layout.grow_up(),
-        # MonadTall
         lazy.layout.grow(),
+        lazy.layout.decrease_nmaster(),
         desc="Grow window up",
     ),
     Key(
         [mod],
         "n",
         lazy.layout.normalize(),
-        # MonadTall
         lazy.layout.reset(),
         desc="Reset all window sizes",
     ),
@@ -510,7 +511,7 @@ colors = {
 }
 
 widget_defaults = dict(
-    font="FiraCode Nerd Font Medium",
+    font="FiraCode Nerd Font Medium",  # "JetBrainsMono Nerd Font Medium"
     fontsize=14,
     padding=3,
 )
@@ -557,7 +558,7 @@ def init_widgets():
         widget.TextBox(
             text="", padding=6, fontsize=16, foreground=colors["light-grey"]
         ),
-        widget.CurrentLayout(foreground=colors["light-grey"], fontsize=14),
+        widget.CurrentLayout(foreground=colors["light-grey"], fontsize=15),
         widget.Spacer(10),
         # WindowName
         widget.TaskList(
@@ -708,6 +709,16 @@ floating_layout = layout.Floating(
         Match(wm_class="zoom"),
         Match(title="branchdialog"),  # gitk
         Match(title="pinentry"),  # GPG key password entry
+        Match(title="branchdialog"),
+        Match(title="Open File"),
+        Match(title="pinentry"),
+        Match(wm_class="file_progress"),
+        Match(wm_class="confirm"),
+        Match(wm_class="dialog"),
+        Match(wm_class="download"),
+        Match(wm_class="notification"),
+        Match(wm_class="error"),
+        Match(wm_class="splash"),
     ],
     # Configuration
     border_width=0,
