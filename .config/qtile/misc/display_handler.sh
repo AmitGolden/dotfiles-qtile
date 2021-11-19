@@ -67,7 +67,7 @@ function DeactivateHDMI {
     MONITOR=eDP1
 }
 
-# actual script
+
 while true
 do
     if ! HDMIActive && HDMIConnected
