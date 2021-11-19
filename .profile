@@ -5,7 +5,7 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 export BAT_THEME=base16
 export GDK_CORE_DEVICE_EVENTS=1
 
-export BW_SESSION="ifIGi83yNlBdU6T9YH7TES/YIXIoYeu1NH9pBJ7WHXh8jZ/Ggud3AWxtsVAAe9XkTmS+2AsoAQ2p/6tCGS7m/g=="
+export BW_SESSION="N547e767ODyabEdDp7Jh0fJbhwyznV1SocNxMJXRC8eAx7csN02nKz+9TdCD+2m3a14nuCpggQSxjjaZJl+twg=="
 
 export PATH=/home/amitgold/.local/bin:$PATH
 
