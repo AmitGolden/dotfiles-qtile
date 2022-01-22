@@ -20,7 +20,7 @@ from battery import get_battery_icon
 mod = "mod4"
 alt = "mod1"
 terminal = "kitty"
-browser = "brave"
+browser = "brave --use-gl=egl --enable-features=VaapiVideoDecoder"
 home = os.path.expanduser("~")
 qtileDir = f"{home}/.config/qtile"
 
@@ -163,6 +163,7 @@ keys = [
     Key([mod], "comma", lazy.prev_screen(), desc="Move focus to prev monitor"),
     Key([mod], "slash", switch_screens, desc="Toggle focus between last used monitors"),
     Key([mod], "f", lazy.window.toggle_floating(), desc="Toggle floating"),
+    Key([mod, "shift"], "f", lazy.window.toggle_fullscreen(), desc="Toggle fullscreen"),
     Key(
         [],
         "F10",
@@ -354,7 +355,7 @@ keys = [
     Key(
         [mod],
         "w",
-        lazy.spawn(f"{browser} https://web.whatsapp.com/"),
+        lazy.spawn(f"{browser} --new-window https://web.whatsapp.com/"),
         desc="Launch WhatsApp Web",
     ),
     # Media

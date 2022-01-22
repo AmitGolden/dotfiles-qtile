@@ -2,7 +2,7 @@
 
 # default monitor is eDP1
 MONITOR=eDP1
-pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
+pactl set-card-profile 'alsa_card.pci-0000_00_1f.3' output:analog-stereo+input:analog-stereo
 
 MODE=mirror
 
@@ -23,7 +23,7 @@ function extend {
     turn_off
     # xrandr --output HDMI1 --mode 1920x1200 --right-of eDP1
     xrandr --output HDMI1 --preferred --right-of eDP1
-    pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
+    pactl set-card-profile 'alsa_card.pci-0000_00_1f.3' output:analog-stereo+input:analog-stereo
     dunstify -r 42000 'Extend Display'
     ~/.config/qtile/misc/random_wallpaper.sh &
 }
@@ -31,7 +31,7 @@ function extend {
 function mirror {
     turn_off
     xrandr --output HDMI1 --auto --scale-from 1920x1080 --output eDP1
-    pacmd set-card-profile 0 output:hdmi-stereo+input:analog-stereo
+    pactl set-card-profile 'alsa_card.pci-0000_00_1f.3' output:hdmi-stereo+input:analog-stereo
     dunstify -r 42000 'Mirror Display'
     ~/.config/qtile/misc/random_wallpaper.sh &
 }
@@ -62,7 +62,7 @@ function ActivateHDMI {
     MONITOR=HDMI1
 }
 function DeactivateHDMI {
-    pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
+    pactl set-card-profile 'alsa_card.pci-0000_00_1f.3' output:analog-stereo+input:analog-stereo
     turn_off
     MONITOR=eDP1
 }
