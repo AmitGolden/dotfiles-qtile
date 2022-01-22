@@ -10,7 +10,7 @@ killall dunst
 killall sleep.sh
 killall picom
 
-echo 2 > /tmp/libinput_discrete_deltay_multiplier &
+imwheel
 
 # gnome-keyring-daemon -d &
 ~/.config/qtile/misc/display_handler.sh &
